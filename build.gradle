@@ -1,0 +1,12 @@
+apply plugin: 'java'
+
+repositories {
+   mavenCentral()
+}
+
+dependencies {
+   compile 'org.slf4j.slf4j-api:1.7.14'
+   compile 'org.apache.avro:avro:1.8.0'
+
+   testCompile 'junit:junit:4.12'
+}
