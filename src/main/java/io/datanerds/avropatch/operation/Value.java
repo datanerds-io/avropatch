@@ -4,7 +4,17 @@ class Value {
     protected static final String SCHEMA =
             "[" +
                     "\"boolean\"," +
+                    "\"long\"," +
+                    "\"int\"," +
+                    "\"float\"," +
+                    "\"double\"," +
                     "\"string\"," +
-                    "{\"type\": \"array\", \"items\": \"string\"}" +
+                    "{\"type\": \"array\", \"items\": [" +
+                        "\"long\"," +
+                        "\"int\"," +
+                        "\"float\"," +
+                        "\"double\"," +
+                        "\"string\"" +
+                    "]}" +
             "]";
 }

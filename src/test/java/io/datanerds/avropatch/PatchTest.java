@@ -1,8 +1,7 @@
-package io.datanerds.avropatc;
+package io.datanerds.avropatch;
 
 import com.github.fge.jackson.jsonpointer.JsonPointer;
 import com.google.common.collect.ImmutableList;
-import io.datanerds.avropatch.Patch;
 import io.datanerds.avropatch.operation.Add;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericContainer;
@@ -24,6 +23,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import static io.datanerds.avropatch.TestUtil.toAvro;
+import static io.datanerds.avropatch.TestUtil.toObject;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -56,23 +57,6 @@ public class PatchTest {
         Add<String> add2 = toObject(record, schema);
         assertThat(add.value, is(equalTo(add2.value)));
         assertThat(add.path, is(equalTo(add2.path)));
-    }
-
-    private <T extends GenericContainer, R> R toObject(T avro, Schema schema) throws IOException {
-        DatumWriter<T> writer = new GenericDatumWriter<>(schema);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        writer.write(avro, EncoderFactory.get().directBinaryEncoder(out, null));
-        DatumReader<R> reader = new ReflectDatumReader<>(schema);
-        return reader.read(null, DecoderFactory.get().binaryDecoder(out.toByteArray(), null));
-    }
-
-    private <T, R extends GenericContainer> R toAvro(T object, Schema schema) throws IOException {
-        DatumWriter<T> writer = new ReflectDatumWriter<>(schema);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        writer.write(object, EncoderFactory.get().directBinaryEncoder(out, null));
-        DatumReader<R> reader = new GenericDatumReader<>(schema);
-        return reader.read(null, DecoderFactory.get().binaryDecoder(out.toByteArray(), null));
-
     }
 
 }
