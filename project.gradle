@@ -1,0 +1,27 @@
+group = 'io.datanerds';
+version = '0.1.0-SNAPSHOT';
+sourceCompatibility = '1.8';
+targetCompatibility = '1.8';
+
+project.ext {
+    about = "An Avro implementation of JSON Patch as defined in RFC 6902"
+    url = "https://github.com/datanerds-io/${name}"
+    gitrwscm = "git@github.com:datanerds-io/${name}"
+    gitroscm = "https://github.com/datanerds-io/${name}.git"
+    developer = "Frank Wisniewski"
+    developerId = "frankwis"
+    developerMail = "frankwis@engineer.com"
+};
+
+dependencies {
+    compile 'org.apache.avro:avro:1.8.0'
+    compile 'com.github.fge:jackson-coreutils:1.8'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'com.google.guava:guava:19.0'
+    testCompile 'org.slf4j:slf4j-simple:1.7.18'
+}
+
+javadoc.options.links('http://docs.oracle.com/javase/8/docs/api/');
+javadoc.options.links('http://avro.apache.org/docs/current/api/java/');
+javadoc.options.links('http://fge.github.io/jackson-coreutils/');

@@ -1,14 +1,63 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'osgi'
+
+apply from: 'project.gradle'
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    compile 'org.apache.avro:avro:1.8.0'
-    compile 'com.github.fge:jackson-coreutils:1.8'
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources';
+    from sourceSets.main.allSource;
+}
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'com.google.guava:guava:19.0'
-    testCompile 'org.slf4j:slf4j-simple:1.7.18'
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc';
+    from javadoc.destinationDir;
+}
+
+artifacts {
+    archives jar;
+    archives sourcesJar;
+    archives javadocJar;
+}
+
+[
+        install.repositories.mavenInstaller
+]*.pom*.whenConfigured { pom ->
+    pom.project {
+        name project.name;
+        packaging "jar";
+        description project.about;
+        url url;
+
+        scm {
+            url gitrwscm;
+            connection gitrwscm;
+            developerConnection gitroscm;
+        }
+
+        licenses {
+            license {
+                name "Lesser General Public License, version 3 or greater";
+                url "http://www.gnu.org/licenses/lgpl.html";
+                distribution "repo";
+            };
+            license {
+                name "Apache Software License, version 2.0";
+                url "http://www.apache.org/licenses/LICENSE-2.0";
+                distribution "repo";
+            }
+        }
+
+        developers {
+            developer {
+                id project.developerId;
+                name project.developer;
+                email project.developerMail;
+            }
+        }
+    }
 }
