@@ -1,12 +1,14 @@
 apply plugin: 'java'
 
 repositories {
-   mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-   compile 'org.slf4j.slf4j-api:1.7.14'
-   compile 'org.apache.avro:avro:1.8.0'
+    compile 'org.apache.avro:avro:1.8.0'
+    compile 'com.github.fge:jackson-coreutils:1.8'
 
-   testCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
+    testCompile 'com.google.guava:guava:19.0'
+    testCompile 'org.slf4j:slf4j-simple:1.7.18'
 }
