@@ -1,10 +1,8 @@
 package io.datanerds.avropatch.operation;
 
-import com.github.fge.jackson.jsonpointer.JsonPointer;
 import com.google.common.collect.ImmutableList;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
-import org.apache.avro.reflect.AvroSchema;
 import org.apache.avro.reflect.ReflectData;
 import org.junit.Test;
 

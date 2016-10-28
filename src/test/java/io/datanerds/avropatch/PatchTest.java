@@ -1,8 +1,8 @@
 package io.datanerds.avropatch;
 
-import com.github.fge.jackson.jsonpointer.JsonPointer;
 import com.google.common.collect.ImmutableList;
 import io.datanerds.avropatch.operation.Add;
+import io.datanerds.avropatch.operation.Path;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericContainer;
 import org.apache.avro.generic.GenericDatumReader;
@@ -36,13 +36,13 @@ public class PatchTest {
     @Test
     public void debug() {
         Schema schema = ReflectData.get().getSchema(Patch.class);
-        logger.debug("Schema for Patch: {}", schema);
+        logger.info("Schema for Patch: {}", schema);
     }
 
     @Test
     public void addString() throws IOException {
         Schema schema = ReflectData.get().getSchema(Add.class);
-        Add<String> add = new Add<>(JsonPointer.of("person", "name"), "hello");
+        Add<String> add = new Add<>(Path.of("person", "name"), "hello");
         GenericRecord record = toAvro(add, schema);
         Add<String> add2 = toObject(record, schema);
         assertThat(add.value, is(equalTo(add2.value)));
@@ -52,7 +52,7 @@ public class PatchTest {
     @Test
     public void addStringList() throws IOException {
         Schema schema = ReflectData.get().getSchema(Add.class);
-        Add<List<String>> add = new Add<>(JsonPointer.of("person", "name"), ImmutableList.of("hello", "world"));
+        Add<List<String>> add = new Add<>(Path.of("person", "name"), ImmutableList.of("hello", "world"));
         GenericRecord record = toAvro(add, schema);
         Add<String> add2 = toObject(record, schema);
         assertThat(add.value, is(equalTo(add2.value)));
