@@ -1,21 +1,22 @@
 package io.datanerds.avropatch.operation;
 
 import org.apache.avro.reflect.AvroIgnore;
-import org.apache.avro.reflect.AvroSchema;
-import org.apache.avro.reflect.Stringable;
 
-public class Copy implements Operation {
+public final class Copy implements Operation {
     @AvroIgnore
     public static final String op = "copy";
-    @Stringable
-    @AvroSchema("\"string\"")
-    public final Path path;
-    @Stringable
-    @AvroSchema("\"string\"")
     public final Path from;
+    public final Path path;
 
-    public Copy(Path path, Path from) {
-        this.path = path;
+    /**
+     * Private no arg constructor for Avro deserializer.
+     */
+    private Copy() {
+        from = null;
+        path = null;
+    }
+    public Copy(Path from, Path path) {
         this.from = from;
+        this.path = path;
     }
 }

@@ -4,12 +4,17 @@ import org.apache.avro.reflect.AvroIgnore;
 import org.apache.avro.reflect.AvroSchema;
 import org.apache.avro.reflect.Stringable;
 
-public class Remove implements Operation {
+public final class Remove implements Operation {
     @AvroIgnore
     public static final String op = "remove";
-    @Stringable
-    @AvroSchema("\"string\"")
     public final Path path;
+
+    /**
+     * Private no arg constructor for Avro deserializer.
+     */
+    private Remove() {
+        this.path = null;
+    }
 
     public Remove(Path path) {
         this.path = path;

@@ -4,18 +4,22 @@ import org.apache.avro.reflect.AvroIgnore;
 import org.apache.avro.reflect.AvroSchema;
 import org.apache.avro.reflect.Stringable;
 
-public class Move implements Operation {
+public final class Move implements Operation {
     @AvroIgnore
     public static final String op = "move";
-    @Stringable
-    @AvroSchema("\"string\"")
-    public final Path path;
-    @Stringable
-    @AvroSchema("\"string\"")
     public final Path from;
+    public final Path path;
 
-    public Move(Path path, Path from) {
-        this.path = path;
+    /**
+     * Private no arg constructor for Avro deserializer.
+     */
+    private Move() {
+        this.from = null;
+        this.path = null;
+    }
+
+    public Move(Path from, Path path) {
         this.from = from;
+        this.path = path;
     }
 }
