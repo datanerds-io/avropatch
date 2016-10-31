@@ -23,21 +23,17 @@ public class Path {
         this(Collections.emptyList());
     }
 
-    private Path(final List<String> parts) {
+    private Path(List<String> parts) {
         this.parts = Collections.unmodifiableList(parts);
     }
 
-    public static Path of(final String... parts) {
+    public static Path of(String... parts) {
         List<String> paths = Arrays.asList(parts);
-        for (String path : paths) {
-            if (!VALID_PATTERN.matcher(path).matches()) {
-                throw new InvalidPathException(String.format("%s is not a valid JSON path", path));
-            }
-        }
+        paths.forEach(Path::validateSubPath);
         return new Path(paths);
     }
 
-    public static Path parse(final String path) {
+    public static Path parse(String path) {
         verifyParsable(path);
         if (SLASH.equals(path)) {
             return ROOT;
@@ -61,6 +57,12 @@ public class Path {
 
     public List<String> parts() {
         return parts;
+    }
+
+    private static void validateSubPath(String path) {
+        if (!VALID_PATTERN.matcher(path).matches()) {
+            throw new InvalidPathException(String.format("%s is not a valid JSON path", path));
+        }
     }
 
     @Override
