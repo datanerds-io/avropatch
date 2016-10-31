@@ -1,7 +1,7 @@
 package io.datanerds.avropatch.operation;
 
-class Value {
-    protected static final String SCHEMA =
+interface Value {
+    String SCHEMA =
             "[" +
                     "\"boolean\"," +
                     "\"long\"," +
