@@ -2,8 +2,12 @@ package io.datanerds.avropatch.operation;
 
 import org.apache.avro.reflect.AvroIgnore;
 import org.apache.avro.reflect.AvroSchema;
-import org.apache.avro.reflect.Stringable;
 
+/**
+ * This class represents the "test" operation of RFC 6902 'JavaScript Object Notation (JSON) Patch'.
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc6902#section-4.6">https://tools.ietf.org/html/rfc6902#section-4.6</a>
+ */
 public final class Test<T> implements Operation {
     @AvroIgnore
     public static final String op = "test";
@@ -11,14 +15,18 @@ public final class Test<T> implements Operation {
     @AvroSchema(Value.SCHEMA)
     public final T value;
 
-    /**
-     * Private no arg constructor for Avro deserializer.
-     */
     private Test() {
         this.path = null;
         this.value = null;
     }
 
+    /**
+     *
+     * @param path Path pointing out which JSON value should be tested against
+     * @param value Actual value to <i>test</i> against
+     *
+     * @see Value
+     */
     public Test(Path path, T value) {
         this.path = path;
         this.value = value;

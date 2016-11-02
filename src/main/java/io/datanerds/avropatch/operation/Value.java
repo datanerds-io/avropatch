@@ -1,5 +1,8 @@
 package io.datanerds.avropatch.operation;
 
+/**
+ * This interface holds the schema for all valid value types.
+ */
 interface Value {
     String SCHEMA =
             "[" +

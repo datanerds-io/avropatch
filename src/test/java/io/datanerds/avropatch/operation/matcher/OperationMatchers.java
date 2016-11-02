@@ -12,14 +12,16 @@ import static org.hamcrest.core.AllOf.allOf;
 
 public final class OperationMatchers {
 
-    private static Map<Class<? extends Operation>, Function<Operation, Matcher<? extends Operation>>> map = new HashMap<>();
+    private static Map<Class<? extends Operation>, Function<Operation, Matcher<? extends Operation>>> matchers =
+            new HashMap<>();
+
     static {
-        map.put(Add.class, expected -> Matchers.equalTo((Add)expected));
-        map.put(Copy.class, expected -> Matchers.equalTo((Copy)expected));
-        map.put(Move.class, expected -> Matchers.equalTo((Move)expected));
-        map.put(Remove.class, expected -> Matchers.equalTo((Remove)expected));
-        map.put(Replace.class, expected -> Matchers.equalTo((Replace)expected));
-        map.put(Test.class, expected -> Matchers.equalTo((Test)expected));
+        matchers.put(Add.class, expected -> Matchers.equalTo((Add) expected));
+        matchers.put(Copy.class, expected -> Matchers.equalTo((Copy) expected));
+        matchers.put(Move.class, expected -> Matchers.equalTo((Move) expected));
+        matchers.put(Remove.class, expected -> Matchers.equalTo((Remove) expected));
+        matchers.put(Replace.class, expected -> Matchers.equalTo((Replace) expected));
+        matchers.put(Test.class, expected -> Matchers.equalTo((Test) expected));
     }
 
     private OperationMatchers() {
@@ -27,7 +29,7 @@ public final class OperationMatchers {
 
     public static <T extends Operation> Matcher<T> equalTo(T expected) {
         Objects.nonNull(expected);
-        return (Matcher<T>) Optional.ofNullable(map.get(expected.getClass()))
+        return (Matcher<T>) Optional.ofNullable(matchers.get(expected.getClass()))
                 .orElseThrow(() -> new IllegalArgumentException(
                         String.format("Matcher for operation of type %s does not exist", expected.getClass())))
                 .apply(expected);

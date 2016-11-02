@@ -11,8 +11,8 @@ import java.io.IOException;
 
 public class Serializer {
 
-    private static final Schema schema = ReflectData.get().getSchema(Patch.class);
-    private static final DatumWriter<Patch> writer = new ReflectDatumWriter<>(schema);
+    public static final Schema SCHEMA = ReflectData.get().getSchema(Patch.class);
+    private static final DatumWriter<Patch> writer = new ReflectDatumWriter<>(SCHEMA);
 
     public static byte[] toBytes(Patch patch) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -23,7 +23,7 @@ public class Serializer {
     }
 
     public static Patch toPatch(byte[] bytes) throws IOException {
-        DatumReader<Patch> reader = new ReflectDatumReader<>(schema);
+        DatumReader<Patch> reader = new ReflectDatumReader<>(SCHEMA);
         return reader.read(null, DecoderFactory.get().binaryDecoder(bytes, null));
     }
 }
