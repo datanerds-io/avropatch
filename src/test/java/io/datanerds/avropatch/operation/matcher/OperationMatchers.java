@@ -6,7 +6,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.core.IsCollectionContaining;
 
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.hamcrest.core.AllOf.allOf;
