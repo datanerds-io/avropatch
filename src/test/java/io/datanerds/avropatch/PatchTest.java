@@ -3,6 +3,7 @@ package io.datanerds.avropatch;
 import com.google.common.collect.ImmutableList;
 import io.datanerds.avropatch.operation.*;
 import org.hamcrest.MatcherAssert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,6 +14,11 @@ import static io.datanerds.avropatch.operation.matcher.OperationMatchers.hasItem
 import static org.hamcrest.Matchers.hasSize;
 
 public class PatchTest {
+
+    @Test
+    public void test() {
+        System.out.println(Patch.SCHEMA.toString());
+    }
 
     @Test
     public void serializesAdd() throws IOException {
