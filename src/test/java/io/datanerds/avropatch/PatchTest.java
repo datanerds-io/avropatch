@@ -6,7 +6,11 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import static io.datanerds.avropatch.operation.matcher.OperationMatchers.hasItem;
 import static io.datanerds.avropatch.operation.matcher.OperationMatchers.hasItems;
@@ -97,6 +101,35 @@ public class PatchTest {
                 new Remove(Path.parse("/person/name")),
                 new Replace(Path.parse("/person/number"), 42),
                 new io.datanerds.avropatch.operation.Test(Path.parse("/person/number"), 42L)));
+    }
+
+    //public static final Schema[] BASIC_TYPES = {BIG_DECIMAL, BIG_INTEGER, BOOLEAN, DATE, DOUBLE, FLOAT, INTEGER, LONG, NULL, STRING, UUID};
+    @Test
+    public void serializesDefaultValueTypes() throws IOException {
+        Date date = new Date();
+        UUID uuid = UUID.randomUUID();
+        Patch patch = new Patch(ImmutableList.of(new Add<>(Path.of("some", "value"), "John Doe"),
+                new Add<>(Path.of("some", "value"), 42),
+                new Add<>(Path.of("some", "value"), 42L),
+                new Add<>(Path.of("some", "value"), uuid),
+                new Add<>(Path.of("some", "value"), new BigDecimal("128976548936549275.9674592348654789")),
+                new Add<>(Path.of("some", "value"), new BigInteger("90374692364523789623490569234562347895")),
+                new Add<>(Path.of("some", "value"), true),
+                new Add<>(Path.of("some", "value"), date),
+                new Add<>(Path.of("some", "value"), 4234.2345)));
+
+        byte[] bytes = patch.toBytes();
+        List<Operation> operations = Patch.of(bytes).getOperations();
+        MatcherAssert.assertThat(operations, hasSize(9));
+        MatcherAssert.assertThat(operations, hasItems(new Add<>(Path.of("some", "value"), "John Doe"),
+                new Add<>(Path.of("some", "value"), 42),
+                new Add<>(Path.of("some", "value"), 42L),
+                new Add<>(Path.of("some", "value"), uuid),
+                new Add<>(Path.of("some", "value"), new BigDecimal("128976548936549275.9674592348654789")),
+                new Add<>(Path.of("some", "value"), new BigInteger("90374692364523789623490569234562347895")),
+                new Add<>(Path.of("some", "value"), true),
+                new Add<>(Path.of("some", "value"), date),
+                new Add<>(Path.of("some", "value"), 4234.2345)));
     }
 
 }

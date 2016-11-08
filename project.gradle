@@ -16,7 +16,7 @@ project.ext {
 dependencies {
 
     compile([
-            "org.apache.avro:avro:1.8.0",
+            "org.apache.avro:avro:1.8.1",
             "org.slf4j:slf4j-api:1.7.18"
     ])
 
