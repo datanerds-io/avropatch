@@ -1,19 +1,22 @@
 package io.datanerds.avropatch.value.conversion;
 
-import org.apache.avro.Conversion;
+import io.datanerds.avropatch.value.conversion.CustomTypes.BigIntegerType;
 import org.apache.avro.LogicalType;
+import org.apache.avro.LogicalTypes;
 import org.apache.avro.Schema;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
-public class BigIntegerConversion extends Conversion<BigInteger> {
-    private static final String NAME = "big-integer";
-    public static final Schema SCHEMA = new LogicalType(NAME).addToSchema(Schema.create(Schema.Type.BYTES));
+public class BigIntegerConversion extends AvroConversion<BigInteger> {
+
+    static {
+        LogicalTypes.register(BigIntegerType.NAME, schema -> BigIntegerType.LOGICAL_TYPE);
+    }
 
     @Override
     public Schema getRecommendedSchema() {
-        return SCHEMA;
+        return BigIntegerType.SCHEMA;
     }
 
     @Override
@@ -23,24 +26,16 @@ public class BigIntegerConversion extends Conversion<BigInteger> {
 
     @Override
     public String getLogicalTypeName() {
-        return NAME;
+        return BigIntegerType.NAME;
     }
 
     @Override
     public BigInteger fromBytes(ByteBuffer value, Schema schema, LogicalType type)  {
-        return fromBytes(value);
+        return new BigInteger(value.array());
     }
 
     @Override
     public ByteBuffer toBytes(BigInteger value, Schema schema, LogicalType type)  {
-        return toBytes(value);
-    }
-
-    protected static BigInteger fromBytes(ByteBuffer value) {
-        return new BigInteger(value.array());
-    }
-
-    protected static  ByteBuffer toBytes(BigInteger value)  {
         return ByteBuffer.wrap(value.toByteArray());
     }
 }

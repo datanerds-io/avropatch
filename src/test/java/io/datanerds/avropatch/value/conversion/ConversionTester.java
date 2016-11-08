@@ -3,16 +3,12 @@ package io.datanerds.avropatch.value.conversion;
 import org.apache.avro.Conversion;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
-import org.apache.avro.generic.GenericDatumReader;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.io.DecoderFactory;
-import org.apache.avro.io.Encoder;
-import org.apache.avro.io.EncoderFactory;
-import org.apache.avro.reflect.ReflectDatumReader;
-import org.apache.avro.reflect.ReflectDatumWriter;
+import org.apache.avro.io.*;
+import org.apache.avro.reflect.ReflectData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -22,13 +18,15 @@ import static org.junit.Assert.assertThat;
 
 public final class ConversionTester<T> {
 
-    private final GenericDatumWriter<T> writer;
-    private final GenericDatumReader<T> reader;
+    private final DatumWriter<T> writer;
+    private final DatumReader<T> reader;
+    private final ReflectData data;
 
     private ConversionTester(Schema schema) {
         Objects.nonNull(schema);
-        reader = new ReflectDatumReader<>(schema);
-        writer = new ReflectDatumWriter<>(schema);
+        data = new ReflectData();
+        reader = data.createDatumReader(schema);
+        writer = data.createDatumWriter(schema);
     }
 
     public static final <T> ConversionTester<T> withSchemata(Schema... types) {
@@ -45,10 +43,7 @@ public final class ConversionTester<T> {
     }
 
     public ConversionTester<T> withConverters(Conversion<?>... converters) {
-        for (Conversion conversion : converters) {
-            reader.getData().addLogicalTypeConversion(conversion);
-            writer.getData().addLogicalTypeConversion(conversion);
-        }
+        Arrays.asList(converters).forEach(conversion -> data.addLogicalTypeConversion(conversion));
         return this;
     }
 

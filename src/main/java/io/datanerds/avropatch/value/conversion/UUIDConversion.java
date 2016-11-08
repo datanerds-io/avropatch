@@ -1,23 +1,18 @@
 package io.datanerds.avropatch.value.conversion;
 
-import org.apache.avro.Conversion;
+import io.datanerds.avropatch.value.conversion.CustomTypes.UuidType;
 import org.apache.avro.LogicalType;
-import org.apache.avro.LogicalTypes;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericFixed;
 
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-public class UUIDConversion extends Conversion<UUID> {
-    private static final String NAME = LogicalTypes.uuid().getName();
-    private static final String DOC = "TODO";
-    private static final int SIZE = 2 * Long.BYTES;
-    public static final Schema SCHEMA = LogicalTypes.uuid().addToSchema(Schema.createFixed(NAME, DOC, null, SIZE));
+public class UUIDConversion extends AvroConversion<UUID> {
 
     @Override
     public Schema getRecommendedSchema() {
-        return SCHEMA;
+        return UuidType.SCHEMA;
     }
 
     @Override
@@ -27,7 +22,7 @@ public class UUIDConversion extends Conversion<UUID> {
 
     @Override
     public String getLogicalTypeName() {
-        return NAME;
+        return UuidType.NAME;
     }
 
     @Override
@@ -35,7 +30,7 @@ public class UUIDConversion extends Conversion<UUID> {
         return new GenericFixed() {
             @Override
             public byte[] bytes() {
-                ByteBuffer buffer = ByteBuffer.allocate(SIZE);
+                ByteBuffer buffer = ByteBuffer.allocate(UuidType.SIZE);
                 buffer.putLong(value.getLeastSignificantBits());
                 buffer.putLong(value.getMostSignificantBits());
                 return buffer.array();
@@ -43,7 +38,7 @@ public class UUIDConversion extends Conversion<UUID> {
 
             @Override
             public Schema getSchema() {
-                return SCHEMA;
+                return UuidType.SCHEMA;
             }
         };
     }

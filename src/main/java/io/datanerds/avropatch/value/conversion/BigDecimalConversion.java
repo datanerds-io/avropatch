@@ -1,31 +1,30 @@
 package io.datanerds.avropatch.value.conversion;
 
-import org.apache.avro.Conversion;
+import io.datanerds.avropatch.value.conversion.CustomTypes.BigDecimalType;
 import org.apache.avro.LogicalType;
 import org.apache.avro.Schema;
-import org.apache.avro.SchemaBuilder;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 
 /**
- * TODO
+ * This class converts an {@link BigDecimal} value into am Avro {@link IndexedRecord} and back. It depends on
+ * {@link BigIntegerConversion} since it serializes the {@link BigDecimal}s unscaled value into a {@link BigInteger} and
+ * its scale into an {@link Integer}.
  *
  * @see BigIntegerConversion
  */
-public class BigDecimalConversion extends Conversion<BigDecimal> {
+public class BigDecimalConversion extends AvroConversion<BigDecimal> {
 
-    private static final String NAME = "big-decimal";
-    private static final String DOC = "TODO";
-    private static final Schema RECORD = SchemaBuilder.record("decimal").doc(DOC).fields().name("unscaledValue").type(BigIntegerConversion.SCHEMA).noDefault().name("scale").type(Schema.create(Schema.Type.INT)).noDefault().endRecord();
-    public static final Schema SCHEMA = new LogicalType(NAME).addToSchema(RECORD);
+    static {
+        registerLogicalType(BigDecimalType.NAME, BigDecimalType.LOGICAL_TYPE);
+    }
 
     @Override
     public Schema getRecommendedSchema() {
-        return SCHEMA;
+        return BigDecimalType.SCHEMA;
     }
 
     @Override
@@ -35,21 +34,20 @@ public class BigDecimalConversion extends Conversion<BigDecimal> {
 
     @Override
     public String getLogicalTypeName() {
-        return NAME;
+        return BigDecimalType.NAME;
     }
 
     @Override
     public BigDecimal fromRecord(IndexedRecord value, Schema schema, LogicalType type) {
-        BigInteger unscaledValue = BigIntegerConversion.fromBytes((ByteBuffer)value.get(0));
+        BigInteger unscaledValue = (BigInteger)value.get(0);
         int scale = (int) value.get(1);
-
         return new BigDecimal(unscaledValue, scale);
     }
 
     @Override
     public IndexedRecord toRecord(BigDecimal value, Schema schema, LogicalType type) {
         GenericData.Record record = new GenericData.Record(schema);
-        record.put(0, BigIntegerConversion.toBytes(value.unscaledValue()));
+        record.put(0, value.unscaledValue());
         record.put(1, value.scale());
         return record;
     }
