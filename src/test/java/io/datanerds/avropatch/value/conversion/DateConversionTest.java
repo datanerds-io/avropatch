@@ -2,7 +2,7 @@ package io.datanerds.avropatch.value.conversion;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import io.datanerds.avropatch.value.conversion.CustomTypes.DateType;
+import io.datanerds.avropatch.schema.CustomTypes.DateType;
 import org.apache.avro.Schema;
 import org.junit.Test;
 

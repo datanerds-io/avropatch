@@ -1,6 +1,7 @@
 package io.datanerds.avropatch.value.conversion;
 
-import io.datanerds.avropatch.value.conversion.CustomTypes.UuidType;
+import io.datanerds.avropatch.schema.CustomTypes.UuidType;
+import org.apache.avro.Conversion;
 import org.apache.avro.LogicalType;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericFixed;
@@ -8,7 +9,7 @@ import org.apache.avro.generic.GenericFixed;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-public class UUIDConversion extends AvroConversion<UUID> {
+public class UUIDConversion extends Conversion<UUID> {
 
     @Override
     public Schema getRecommendedSchema() {

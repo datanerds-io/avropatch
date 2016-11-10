@@ -1,7 +1,9 @@
 package io.datanerds.avropatch.value.conversion;
 
-import io.datanerds.avropatch.value.conversion.CustomTypes.BigDecimalType;
+import io.datanerds.avropatch.schema.CustomTypes.BigDecimalType;
+import org.apache.avro.Conversion;
 import org.apache.avro.LogicalType;
+import org.apache.avro.LogicalTypes;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.IndexedRecord;
@@ -13,13 +15,16 @@ import java.math.BigInteger;
  * This class converts an {@link BigDecimal} value into am Avro {@link IndexedRecord} and back. It depends on
  * {@link BigIntegerConversion} since it serializes the {@link BigDecimal}s unscaled value into a {@link BigInteger} and
  * its scale into an {@link Integer}.
+ * Also, its logical type is statically registered in {@link LogicalTypes}, because it introduces a new custom type name
+ * 'big-decimal'.
  *
  * @see BigIntegerConversion
+ * @see LogicalTypes
  */
-public class BigDecimalConversion extends AvroConversion<BigDecimal> {
+public class BigDecimalConversion extends Conversion<BigDecimal> {
 
     static {
-        registerLogicalType(BigDecimalType.NAME, BigDecimalType.LOGICAL_TYPE);
+        LogicalTypes.register(BigDecimalType.NAME, schema -> BigDecimalType.LOGICAL_TYPE);
     }
 
     @Override

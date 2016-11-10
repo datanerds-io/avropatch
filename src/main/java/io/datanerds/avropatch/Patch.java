@@ -1,11 +1,9 @@
 package io.datanerds.avropatch;
 
-import avro.shaded.com.google.common.collect.ImmutableList;
 import io.datanerds.avropatch.operation.Operation;
 import io.datanerds.avropatch.value.conversion.*;
 import org.apache.avro.Schema;
 import org.apache.avro.io.*;
-import org.apache.avro.reflect.ReflectData;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -13,10 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class represents a JSON PATCH operation holding a sequence of operations to apply to a given object.
+ *
+ * @see <a href="https://tools.ietf.org/html/rfc6902">https://tools.ietf.org/html/rfc6902</a>
+ */
 public class Patch {
 
     private static final PatchSerializer SERIALIZER = new PatchSerializer();
-    public static final Schema SCHEMA = SERIALIZER.schema;
 
     private final List<Operation> operations;
 
@@ -48,21 +50,14 @@ public class Patch {
     }
 
     private static class PatchSerializer {
-
-        static final List<AvroConversion<?>> AVRO_CONVERSIONS =
-                ImmutableList.of(new DateConversion(), new BigIntegerConversion(), new BigDecimalConversion(),
-                        new UUIDConversion());
         final DatumWriter<Patch> writer;
         final DatumReader<Patch> reader;
-        final Schema schema;
 
         private PatchSerializer() {
-            ReflectData data = new ReflectData();
-            AVRO_CONVERSIONS.forEach(avroConversion -> avroConversion.register(data));
-            schema = data.getSchema(Patch.class);
+            Schema schema = AvroData.get().getSchema(Patch.class);
 
-            writer = data.createDatumWriter(schema);
-            reader = data.createDatumReader(schema);
+            writer = AvroData.get().createDatumWriter(schema);
+            reader = AvroData.get().createDatumReader(schema);
         }
     }
 }

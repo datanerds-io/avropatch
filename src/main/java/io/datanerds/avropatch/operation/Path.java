@@ -1,7 +1,6 @@
 package io.datanerds.avropatch.operation;
 
 import io.datanerds.avropatch.exception.InvalidPathException;
-import org.apache.avro.reflect.AvroSchema;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,7 +15,6 @@ public class Path {
 
     private static final Pattern VALID_PATTERN = Pattern.compile("[0-9a-zA-Z][0-9a-zA-Z_-]*");
 
-    @AvroSchema("{\"type\": \"array\", \"items\": \"string\"}")
     private final List<String> parts;
 
     private Path() {

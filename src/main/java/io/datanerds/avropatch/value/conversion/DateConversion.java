@@ -1,8 +1,9 @@
 package io.datanerds.avropatch.value.conversion;
 
-import io.datanerds.avropatch.value.conversion.CustomTypes.DateType;
+import io.datanerds.avropatch.schema.CustomTypes.DateType;
 import org.apache.avro.Conversion;
 import org.apache.avro.LogicalType;
+import org.apache.avro.LogicalTypes;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericFixed;
 
@@ -18,10 +19,10 @@ import java.util.Date;
  * @see org.apache.avro.LogicalTypes.TimestampMillis
  * @see org.apache.avro.Schema.Type
  */
-public class DateConversion extends AvroConversion<Date> {
+public class DateConversion extends Conversion<Date> {
 
     static {
-        registerLogicalType(DateType.NAME, DateType.LOGICAL_TYPE);
+        LogicalTypes.register(DateType.NAME, schema -> DateType.LOGICAL_TYPE);
     }
 
     @Override
