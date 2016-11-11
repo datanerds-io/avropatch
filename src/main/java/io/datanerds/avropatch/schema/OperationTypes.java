@@ -10,12 +10,12 @@ import static org.apache.avro.Schema.*;
 import static org.apache.avro.Schema.createRecord;
 
 /**
- * This class holds schemata for all patch {@link io.datanerds.avropatch.operation.Operation}s. All schemata are not
- * bound to any specific namespace and therefore domain independent.
- * {@link io.datanerds.avropatch.Patch}/{@link io.datanerds.avropatch.schema.CustomTypes.PatchType} binds it to this
- * library's domain/namespace.
+ * This class holds schemata for all patch {@link io.datanerds.avropatch.operation.Operation}s. All schemata are
+ * bound to this library's domain/namespace.
  */
 public interface OperationTypes {
+
+    String NAMESPACE = io.datanerds.avropatch.operation.Operation.class.getPackage().getName();
 
     interface Add {
         String NAME = io.datanerds.avropatch.operation.Add.class.getSimpleName();
@@ -25,7 +25,7 @@ public interface OperationTypes {
             Field path = new Field("path", Path.SCHEMA, "Path pointing out where the JSON value should be added",
                     NO_DEFAULT);
             Field value = new Field("value", valueSchema, "Actual value to add to patched object", NO_DEFAULT);
-            return createRecord(NAME, DOC, null, false, Arrays.asList(path, value));
+            return createRecord(NAME, DOC, NAMESPACE, false, Arrays.asList(path, value));
         }
     }
 
@@ -36,7 +36,7 @@ public interface OperationTypes {
         static Schema create() {
             Field from = new Field("from", Path.SCHEMA, "Source location of the value to be copied", NO_DEFAULT);
             Field path = new Field("path", Path.SCHEMA, "Target location of value to be copied", NO_DEFAULT);
-            return createRecord(NAME, DOC, null, false, Arrays.asList(from, path));
+            return createRecord(NAME, DOC, NAMESPACE, false, Arrays.asList(from, path));
         }
     }
 
@@ -47,7 +47,7 @@ public interface OperationTypes {
         static Schema create() {
             Field from = new Field("from", Path.SCHEMA, "Source location of the value to be moved", NO_DEFAULT);
             Field path = new Field("path", Path.SCHEMA, "Target location for the value to be moved to", NO_DEFAULT);
-            return createRecord(NAME, DOC, null, false, Arrays.asList(from, path));
+            return createRecord(NAME, DOC, NAMESPACE, false, Arrays.asList(from, path));
         }
     }
 
@@ -57,7 +57,7 @@ public interface OperationTypes {
 
         static Schema create() {
             Field path = new Field("path", Path.SCHEMA, "Target location of value to be removed", NO_DEFAULT);
-            return createRecord(NAME, DOC, null, false, Arrays.asList(path));
+            return createRecord(NAME, DOC, NAMESPACE, false, Arrays.asList(path));
         }
     }
 
@@ -69,7 +69,7 @@ public interface OperationTypes {
             Field path = new Field("path", Path.SCHEMA, "Path pointing out where the JSON value should be replaced",
                     NO_DEFAULT);
             Field value = new Field("value", valueSchema, "Actual value to replaced in patched object", NO_DEFAULT);
-            return createRecord(NAME, DOC, null, false, Arrays.asList(path, value));
+            return createRecord(NAME, DOC, NAMESPACE, false, Arrays.asList(path, value));
         }
     }
 
@@ -81,7 +81,7 @@ public interface OperationTypes {
             Field path = new Field("path", Path.SCHEMA, "Path pointing out which JSON value should be tested against",
                     NO_DEFAULT);
             Field value = new Field("value", valueSchema, "Actual value to test< against", NO_DEFAULT);
-            return createRecord(NAME, DOC, null, false, Arrays.asList(path, value));
+            return createRecord(NAME, DOC, NAMESPACE, false, Arrays.asList(path, value));
         }
     }
 

@@ -13,6 +13,7 @@ import org.apache.avro.SchemaBuilder;
 
 import java.util.Arrays;
 
+import static io.datanerds.avropatch.schema.OperationTypes.NAMESPACE;
 import static io.datanerds.avropatch.schema.PrimitiveTypes.*;
 import static org.apache.avro.Schema.createRecord;
 import static org.apache.avro.Schema.createUnion;
@@ -78,7 +79,7 @@ public interface CustomTypes {
     interface Path {
         String NAME = io.datanerds.avropatch.operation.Path.class.getSimpleName();
         String DOC = "JSON Path serialized as String array holding its parts.";
-        Schema SCHEMA = SchemaBuilder.record(NAME).doc(DOC).fields()
+        Schema SCHEMA = SchemaBuilder.record(NAME).doc(DOC).namespace(NAMESPACE).fields()
                 .name("parts").type(Schema.createArray(Schema.create(Type.STRING))).noDefault()
                 .endRecord();
     }

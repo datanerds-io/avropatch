@@ -2,7 +2,6 @@ package io.datanerds.avropatch;
 
 import com.google.common.collect.ImmutableList;
 import io.datanerds.avropatch.operation.*;
-import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -13,7 +12,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static io.datanerds.avropatch.operation.matcher.OperationMatchers.hasItem;
-import static io.datanerds.avropatch.operation.matcher.OperationMatchers.hasItems;
+import static io.datanerds.avropatch.operation.matcher.PatchMatcher.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
 public class PatchTest {
@@ -25,8 +26,8 @@ public class PatchTest {
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
-        MatcherAssert.assertThat(operations, hasSize(1));
-        MatcherAssert.assertThat(operations, hasItem(new Add<>(Path.of("person", "name"), "John Doe")));
+        assertThat(operations, hasSize(1));
+        assertThat(operations, hasItem(new Add<>(Path.of("person", "name"), "John Doe")));
     }
 
     @Test
@@ -36,8 +37,8 @@ public class PatchTest {
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
-        MatcherAssert.assertThat(operations, hasSize(1));
-        MatcherAssert.assertThat(operations, hasItem(new Copy(Path.parse("/person/firstName"), Path.parse("/person/lastName"))));
+        assertThat(operations, hasSize(1));
+        assertThat(operations, hasItem(new Copy(Path.parse("/person/firstName"), Path.parse("/person/lastName"))));
     }
 
     @Test
@@ -47,8 +48,8 @@ public class PatchTest {
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
-        MatcherAssert.assertThat(operations, hasSize(1));
-        MatcherAssert.assertThat(operations, hasItem(new Move(Path.parse("/person/firstName"), Path.parse("/person/lastName"))));
+        assertThat(operations, hasSize(1));
+        assertThat(operations, hasItem(new Move(Path.parse("/person/firstName"), Path.parse("/person/lastName"))));
     }
 
     @Test
@@ -58,8 +59,8 @@ public class PatchTest {
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
-        MatcherAssert.assertThat(operations, hasSize(1));
-        MatcherAssert.assertThat(operations, hasItem(new Remove(Path.parse("/person/name"))));
+        assertThat(operations, hasSize(1));
+        assertThat(operations, hasItem(new Remove(Path.parse("/person/name"))));
     }
 
     @Test
@@ -69,7 +70,7 @@ public class PatchTest {
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
-        MatcherAssert.assertThat(operations, hasItem(new Replace(Path.parse("/person/number"), 42)));
+        assertThat(operations, hasItem(new Replace(Path.parse("/person/number"), 42)));
     }
 
     @Test
@@ -79,8 +80,8 @@ public class PatchTest {
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
-        MatcherAssert.assertThat(operations, hasSize(1));
-        MatcherAssert.assertThat(operations, hasItem(new io.datanerds.avropatch.operation.Test(Path.parse("/person/number"), 42L)));
+        assertThat(operations, hasSize(1));
+        assertThat(operations, hasItem(new io.datanerds.avropatch.operation.Test(Path.parse("/person/number"), 42L)));
     }
 
     @Test
@@ -93,17 +94,9 @@ public class PatchTest {
                 new io.datanerds.avropatch.operation.Test(Path.parse("/person/number"), 42L)));
 
         byte[] bytes = patch.toBytes();
-        List<Operation> operations = Patch.of(bytes).getOperations();
-        MatcherAssert.assertThat(operations, hasSize(6));
-        MatcherAssert.assertThat(operations, hasItems(new Add<>(Path.of("person", "name"), "John Doe"),
-                new Copy(Path.parse("/person/firstName"), Path.parse("/person/lastName")),
-                new Move(Path.parse("/person/firstName"), Path.parse("/person/lastName")),
-                new Remove(Path.parse("/person/name")),
-                new Replace(Path.parse("/person/number"), 42),
-                new io.datanerds.avropatch.operation.Test(Path.parse("/person/number"), 42L)));
+        assertThat(patch, is(equalTo(Patch.of(bytes))));
     }
 
-    //public static final Schema[] BASIC_TYPES = {BIG_DECIMAL, BIG_INTEGER, BOOLEAN, DATE, DOUBLE, FLOAT, INTEGER, LONG, NULL, STRING, UUID};
     @Test
     public void serializesDefaultValueTypes() throws IOException {
         Date date = new Date();
@@ -119,17 +112,7 @@ public class PatchTest {
                 new Add<>(Path.of("some", "value"), 4234.2345)));
 
         byte[] bytes = patch.toBytes();
-        List<Operation> operations = Patch.of(bytes).getOperations();
-        MatcherAssert.assertThat(operations, hasSize(9));
-        MatcherAssert.assertThat(operations, hasItems(new Add<>(Path.of("some", "value"), "John Doe"),
-                new Add<>(Path.of("some", "value"), 42),
-                new Add<>(Path.of("some", "value"), 42L),
-                new Add<>(Path.of("some", "value"), uuid),
-                new Add<>(Path.of("some", "value"), new BigDecimal("128976548936549275.9674592348654789")),
-                new Add<>(Path.of("some", "value"), new BigInteger("90374692364523789623490569234562347895")),
-                new Add<>(Path.of("some", "value"), true),
-                new Add<>(Path.of("some", "value"), date),
-                new Add<>(Path.of("some", "value"), 4234.2345)));
+        assertThat(patch, is(equalTo(Patch.of(bytes))));
     }
 
 }

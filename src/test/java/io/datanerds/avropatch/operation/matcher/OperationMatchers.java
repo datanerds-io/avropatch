@@ -40,7 +40,11 @@ public final class OperationMatchers {
     }
 
     public static <T extends Operation> Matcher<Iterable<T>> hasItems(T... items) {
-        List<Matcher<? super Iterable<T>>> all = new ArrayList<Matcher<? super Iterable<T>>>(items.length);
+        return hasItems(Arrays.asList(items));
+    }
+
+    public static <T extends Operation> Matcher<Iterable<T>> hasItems(List<T> items) {
+        List<Matcher<? super Iterable<T>>> all = new ArrayList<Matcher<? super Iterable<T>>>(items.size());
         for (T element : items) {
             all.add(hasItem(element));
         }
@@ -56,7 +60,7 @@ public final class OperationMatchers {
                 @Override
                 protected boolean matchesSafely(Add item) {
                     return item.path.equals(expected.path)
-                            && item.value.equals(expected.value);
+                            && compareNullable(expected.value, item.value);
                 }
             };
         }
@@ -99,7 +103,7 @@ public final class OperationMatchers {
                 @Override
                 protected boolean matchesSafely(Replace item) {
                     return item.path.equals(expected.path)
-                            && item.value.equals(expected.value);
+                            && compareNullable(expected.value, item.value);
                 }
             };
         }
@@ -110,9 +114,16 @@ public final class OperationMatchers {
                 @Override
                 protected boolean matchesSafely(Test item) {
                     return item.path.equals(expected.path)
-                            && item.value.equals(expected.value);
+                            && compareNullable(expected.value, item.value);
                 }
             };
+        }
+
+        private static <T, V> boolean compareNullable(T expected, V item) {
+            if (item == null) {
+                return expected == null;
+            }
+            return item.equals(expected);
         }
     }
 
