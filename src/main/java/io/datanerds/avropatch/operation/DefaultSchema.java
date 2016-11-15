@@ -3,8 +3,8 @@ package io.datanerds.avropatch.operation;
 /**
  * This interface holds the schema for all valid value types.
  */
-interface Value {
-    String SCHEMA =
+public interface DefaultSchema {
+    String VALUE =
             "[{"
                     + "    \"type\": \"record\","
                     + "    \"name\": \"decimal\","
@@ -45,4 +45,40 @@ interface Value {
                     + "        \"logicalType\": \"big-integer\""
                     + "    }, \"boolean\", \"timestamp\", \"double\", \"float\", \"int\", \"long\", \"null\", \"string\", \"uuid\"]"
                     + "}]";
+
+    String HEADERS =
+            "{\n"
+                    + "    \"type\": \"map\",\n"
+                    + "    \"values\": [\"boolean\", \"double\", \"float\", \"int\", \"long\", \"string\", {\n"
+                    + "        \"type\": \"record\",\n"
+                    + "        \"name\": \"decimal\",\n"
+                    + "        \"doc\": \"BigDecimal value represented via it's scale and unscaled value.\",\n"
+                    + "        \"fields\": [{\n"
+                    + "            \"name\": \"unscaledValue\",\n"
+                    + "            \"type\": {\n"
+                    + "                \"type\": \"bytes\",\n"
+                    + "                \"logicalType\": \"big-integer\"\n"
+                    + "            }\n"
+                    + "        }, {\n"
+                    + "            \"name\": \"scale\",\n"
+                    + "            \"type\": \"int\"\n"
+                    + "        }],\n"
+                    + "        \"logicalType\": \"big-decimal\"\n"
+                    + "    }, {\n"
+                    + "        \"type\": \"bytes\",\n"
+                    + "        \"logicalType\": \"big-integer\"\n"
+                    + "    }, {\n"
+                    + "        \"type\": \"fixed\",\n"
+                    + "        \"name\": \"timestamp\",\n"
+                    + "        \"doc\": \"Timestamp representing the number of milliseconds since January 1, 1970, 00:00:00 GMT\",\n"
+                    + "        \"size\": 8,\n"
+                    + "        \"logicalType\": \"timestamp\"\n"
+                    + "    }, {\n"
+                    + "        \"type\": \"fixed\",\n"
+                    + "        \"name\": \"uuid\",\n"
+                    + "        \"doc\": \"UUID serialized via two long values: It's most significant and least significant 64 bits.\",\n"
+                    + "        \"size\": 16,\n"
+                    + "        \"logicalType\": \"uuid\"\n"
+                    + "    }]\n"
+                    + "}";
 }

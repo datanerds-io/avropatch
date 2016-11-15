@@ -12,7 +12,7 @@ public final class Test<T> implements Operation {
     @AvroIgnore
     public static final String op = "test";
     public final Path path;
-    @AvroSchema(Value.SCHEMA)
+    @AvroSchema(DefaultSchema.VALUE)
     public final T value;
 
     private Test() {
@@ -25,7 +25,7 @@ public final class Test<T> implements Operation {
      * @param path Path pointing out which JSON value should be tested against
      * @param value Actual value to <i>test</i> against
      *
-     * @see Value
+     * @see DefaultSchema
      */
     public Test(Path path, T value) {
         this.path = path;

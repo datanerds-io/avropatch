@@ -1,5 +1,6 @@
 package io.datanerds.avropatch.operation.matcher;
 
+import com.google.common.base.Joiner;
 import io.datanerds.avropatch.operation.*;
 import org.hamcrest.CustomTypeSafeMatcher;
 import org.hamcrest.Matcher;
@@ -50,6 +51,24 @@ public final class OperationMatchers {
         }
 
         return allOf(all);
+    }
+
+    public static <T extends Operation> Matcher<List<T>> hasItemsOrdered(List<T> expected) {
+        return new CustomTypeSafeMatcher<List<T>>(Joiner.on(",").join(expected)) {
+            @Override
+            protected boolean matchesSafely(List<T> value) {
+                if (expected.size() != value.size()) {
+                    return false;
+                }
+                for (int i = 0; i < expected.size(); i++) {
+                    if (!equalTo(expected.get(i)).matches(value.get(i))) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+        };
     }
 
     private static class Matchers {

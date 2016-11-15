@@ -89,7 +89,7 @@ public class OperationTypesTest {
             operations.add(createOperation(operationFunction, 42L));
             operations.add(createOperation(operationFunction, 123.456d));
             operations.add(createOperation(operationFunction, 123.456f));
-            operations.add(createOperation(operationFunction, new BigInteger("83647896845639495762501378945698056348956")));
+            operations.add(createOperation(operationFunction, new BigInteger("8364789684563949576378945698056348956")));
             operations.add(createOperation(operationFunction, new BigDecimal("956740578902345.56734895627895")));
             operations.add(createOperation(operationFunction, UUID.randomUUID()));
             operations.add(createOperation(operationFunction, new Date()));
