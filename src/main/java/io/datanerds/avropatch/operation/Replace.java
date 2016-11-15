@@ -12,7 +12,7 @@ public final class Replace<T> implements Operation {
     @AvroIgnore
     public static final String op = "replace";
     public final Path path;
-    @AvroSchema(Value.SCHEMA)
+    @AvroSchema(DefaultSchema.VALUE)
     public final T value;
 
     private Replace() {
@@ -25,7 +25,7 @@ public final class Replace<T> implements Operation {
      * @param path Path pointing out where the JSON value should be replaced
      * @param value Actual value to <i>replace</i> in patched object
      *
-     * @see Value
+     * @see DefaultSchema
      */
     public Replace(Path path, T value) {
         this.path = path;
