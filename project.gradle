@@ -17,7 +17,8 @@ dependencies {
 
     compile([
             "org.apache.avro:avro:1.8.1",
-            "org.slf4j:slf4j-api:1.7.18"
+            "org.slf4j:slf4j-api:1.7.18",
+            "com.google.code.findbugs:jsr305:3.0.1"
     ])
 
     testCompile([

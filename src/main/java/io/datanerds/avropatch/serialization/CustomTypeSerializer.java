@@ -12,6 +12,7 @@ import org.apache.avro.io.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -22,6 +23,7 @@ import java.util.Objects;
 
 import static io.datanerds.avropatch.schema.PrimitiveTypes.*;
 
+@ThreadSafe
 public final class CustomTypeSerializer {
 
     private static Logger logger = LoggerFactory.getLogger(CustomTypeSerializer.class);
