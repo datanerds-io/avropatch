@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.Supplier;
 
 import static io.datanerds.avropatch.operation.matcher.PatchMatcher.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -38,6 +39,38 @@ public class ConcurrencyTest {
                 .with(Bimmel.class)
                 .nullable()
             .build();
+
+    private enum OperationType {
+        ADD(() -> new Add(generatePath(), generateValue())),
+        COPY(() -> new Copy(generatePath(), generatePath())),
+        MOVE(() -> new Move(generatePath(), generatePath())),
+        REMOVE(() -> new Remove(generatePath())),
+        REPLACE(() -> new Replace<>(generatePath(), generateValue())),
+        TEST(() -> new io.datanerds.avropatch.operation.Test(generatePath(), generateValue()));
+
+        private static final Random random = new Random();
+        private static final ValueGenerator valueGenerator = new ValueGenerator();
+        private final Supplier<Operation> operationSupplier;
+
+        OperationType(Supplier<Operation> operationSupplier) {
+            this.operationSupplier = operationSupplier;
+        }
+
+        public static Operation generateOperation() {
+            OperationType operationType = OperationType.values()[random.nextInt(OperationType.values().length)];
+            return operationType.generate();
+        }
+
+        private static Object generateValue() { return valueGenerator.generate(); }
+
+        private static Path generatePath() {
+            return Path.of("hello", "world");
+        }
+
+        private Operation generate() {
+            return operationSupplier.get();
+        }
+    }
 
     @Test
     public void customTypeSerializer() throws InterruptedException {
@@ -84,13 +117,12 @@ public class ConcurrencyTest {
     }
 
     private static List<Patch> generateData() {
-        OperationGenerator operationGenerator = new OperationGenerator();
         Random random = new Random();
         List<Patch> patches = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_PATCHES; i++) {
             Patch patch = new Patch();
             for (int j = 0; j < random.nextInt(MAX_PATCH_SIZE); j++) {
-                patch.addOperation(operationGenerator.generateOperation());
+                patch.addOperation(OperationType.generateOperation());
             }
             patches.add(patch);
         }
@@ -105,44 +137,6 @@ public class ConcurrencyTest {
             assertThat(input.get(i), is(equalTo(output.get(i))));
         }
     }
-
-    private static class OperationGenerator {
-
-        enum Type {ADD, COPY, MOVE, REMOVE, REPLACE, TEST}
-
-        private final ValueGenerator valueGenerator = new ValueGenerator();
-        private final Random random = new Random();
-
-        private Path generatePath() {
-            return Path.of("hello", "world");
-        }
-
-        public Operation generateOperation() {
-            Type type = Type.values()[random.nextInt(Type.values().length)];
-            return generateOperation(type);
-        }
-
-        public Operation generateOperation(Type type) {
-            switch (type) {
-                case ADD:
-                    return new Add(generatePath(), valueGenerator.generate());
-                case COPY:
-                    return new Copy(generatePath(), generatePath());
-                case MOVE:
-                    return new Move(generatePath(), generatePath());
-                case REMOVE:
-                    return new Remove(generatePath());
-                case REPLACE:
-                    return new Replace<>(generatePath(), valueGenerator.generate());
-                case TEST:
-                    return new io.datanerds.avropatch.operation.Test(generatePath(), valueGenerator.generate());
-                default:
-                    throw new IllegalArgumentException("Unknown type");
-            }
-        }
-
-    }
-
 
     private static class ValueGenerator {
         enum Type {BOOLEAN, DOUBLE, FLOAT, INTEGER, LONG, NULL, STRING, BIG_INTEGER, BIG_DECIMAL, UUID, DATE, BIMMEL}
@@ -206,7 +200,7 @@ public class ConcurrencyTest {
                     return new Bimmel((String)generate(Type.STRING), (int)generate(Type.INTEGER), UUID.randomUUID(),
                             new Bimmel.Bommel((String)generate(Type.STRING)));
                 default:
-                    throw new IllegalArgumentException(String.format("Unknown type %s", type));
+                    throw new IllegalArgumentException(String.format("Unknown type %operationSupplier", type));
             }
         }
     }
