@@ -2,17 +2,13 @@ package io.datanerds.avropatch.serialization;
 
 import com.google.common.collect.ImmutableList;
 import io.datanerds.avropatch.Patch;
-import io.datanerds.avropatch.operation.*;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.function.Supplier;
 
 import static io.datanerds.avropatch.operation.matcher.PatchMatcher.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -39,38 +35,6 @@ public class ConcurrencyTest {
                 .with(Bimmel.class)
                 .nullable()
             .build();
-
-    private enum OperationType {
-        ADD(() -> new Add(generatePath(), generateValue())),
-        COPY(() -> new Copy(generatePath(), generatePath())),
-        MOVE(() -> new Move(generatePath(), generatePath())),
-        REMOVE(() -> new Remove(generatePath())),
-        REPLACE(() -> new Replace<>(generatePath(), generateValue())),
-        TEST(() -> new io.datanerds.avropatch.operation.Test(generatePath(), generateValue()));
-
-        private static final Random random = new Random();
-        private static final ValueGenerator valueGenerator = new ValueGenerator();
-        private final Supplier<Operation> operationSupplier;
-
-        OperationType(Supplier<Operation> operationSupplier) {
-            this.operationSupplier = operationSupplier;
-        }
-
-        public static Operation generateOperation() {
-            OperationType operationType = OperationType.values()[random.nextInt(OperationType.values().length)];
-            return operationType.generate();
-        }
-
-        private static Object generateValue() { return valueGenerator.generate(); }
-
-        private static Path generatePath() {
-            return Path.of("hello", "world");
-        }
-
-        private Operation generate() {
-            return operationSupplier.get();
-        }
-    }
 
     @Test
     public void customTypeSerializer() throws InterruptedException {
@@ -122,7 +86,7 @@ public class ConcurrencyTest {
         for (int i = 0; i < NUMBER_OF_PATCHES; i++) {
             Patch patch = new Patch();
             for (int j = 0; j < random.nextInt(MAX_PATCH_SIZE); j++) {
-                patch.addOperation(OperationType.generateOperation());
+                patch.addOperation(OperationGenerator.generate());
             }
             patches.add(patch);
         }
@@ -135,73 +99,6 @@ public class ConcurrencyTest {
         assertThat(input.size(), is(CoreMatchers.equalTo(output.size())));
         for (int i = 0; i < input.size(); i++) {
             assertThat(input.get(i), is(equalTo(output.get(i))));
-        }
-    }
-
-    private static class ValueGenerator {
-        enum Type {BOOLEAN, DOUBLE, FLOAT, INTEGER, LONG, NULL, STRING, BIG_INTEGER, BIG_DECIMAL, UUID, DATE, BIMMEL}
-
-        private final Random random = new Random();
-
-        private static int getDigitCount(BigInteger number) {
-            double factor = Math.log(2) / Math.log(10);
-            int digitCount = (int) (factor * number.bitLength() + 1);
-            if (BigInteger.TEN.pow(digitCount - 1).compareTo(number) > 0) {
-                return digitCount - 1;
-            }
-            return digitCount;
-        }
-
-        public Object generate() {
-            Type type = Type.values()[random.nextInt(Type.values().length)];
-            if (random.nextBoolean()) {
-                return generate(type);
-            } else {
-                return generateList(type);
-            }
-        }
-
-        public List<?> generateList(Type type) {
-            List<Object> data = new ArrayList<>();
-            for (int i = 0; i < MAX_PATCH_SIZE; i++) {
-                data.add(generate(type));
-            }
-            return data;
-        }
-
-        public Object generate(Type type) {
-            switch (type) {
-                case BOOLEAN:
-                    return random.nextBoolean();
-                case DOUBLE:
-                    return random.nextDouble();
-                case FLOAT:
-                    return random.nextFloat();
-                case INTEGER:
-                    return random.nextInt();
-                case LONG:
-                    return random.nextLong();
-                case NULL:
-                    return null;
-                case STRING:
-                    return UUID.randomUUID().toString();
-                case BIG_INTEGER:
-                    return new BigInteger(random.nextInt(256), random);
-                case BIG_DECIMAL:
-                    BigInteger unscaledValue= new BigInteger(random.nextInt(256), random);
-                    int numberOfDigits = getDigitCount(unscaledValue);
-                    int scale = random.nextInt(numberOfDigits + 1);
-                    return new BigDecimal(unscaledValue, scale);
-                case UUID:
-                    return UUID.randomUUID();
-                case DATE:
-                    return new Date(random.nextLong());
-                case BIMMEL:
-                    return new Bimmel((String)generate(Type.STRING), (int)generate(Type.INTEGER), UUID.randomUUID(),
-                            new Bimmel.Bommel((String)generate(Type.STRING)));
-                default:
-                    throw new IllegalArgumentException(String.format("Unknown type %operationSupplier", type));
-            }
         }
     }
 }
