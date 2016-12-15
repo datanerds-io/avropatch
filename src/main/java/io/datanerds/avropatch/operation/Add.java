@@ -16,9 +16,9 @@ public final class Add<T> implements Operation {
     @AvroSchema(DefaultSchema.VALUE)
     public final T value;
 
+    @SuppressWarnings("unused")
     private Add() {
-        this.path = null;
-        this.value = null;
+        this(null, null);
     }
 
     /**

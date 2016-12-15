@@ -13,9 +13,9 @@ public final class Copy implements Operation {
     public final Path from;
     public final Path path;
 
+    @SuppressWarnings("unused")
     private Copy() {
-        from = null;
-        path = null;
+        this(null, null);
     }
 
     /**

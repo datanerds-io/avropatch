@@ -13,9 +13,9 @@ public final class Move implements Operation {
     public final Path from;
     public final Path path;
 
+    @SuppressWarnings("unused")
     private Move() {
-        this.from = null;
-        this.path = null;
+        this(null, null);
     }
 
     /**

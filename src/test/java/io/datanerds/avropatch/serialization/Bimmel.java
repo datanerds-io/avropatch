@@ -10,11 +10,9 @@ public class Bimmel {
     public final UUID id;
     public final Bommel bommel;
 
+    @SuppressWarnings("unused")
     private Bimmel() {
-        this.bommel = null;
-        this.name = null;
-        this.number = -42;
-        this.id = null;
+        this(null, -42, null, null);
     }
 
     public Bimmel(String name, int number, UUID id, Bommel bommel) {
@@ -47,8 +45,9 @@ public class Bimmel {
     public static class Bommel {
         public final String name;
 
+        @SuppressWarnings("unused")
         private Bommel() {
-            this.name = null;
+            this(null);
         }
 
         public Bommel(String name) {

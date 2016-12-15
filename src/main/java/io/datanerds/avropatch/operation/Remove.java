@@ -12,8 +12,9 @@ public final class Remove implements Operation {
     public static final String op = "remove";
     public final Path path;
 
+    @SuppressWarnings("unused")
     private Remove() {
-        this.path = null;
+        this(null);
     }
 
     /**
