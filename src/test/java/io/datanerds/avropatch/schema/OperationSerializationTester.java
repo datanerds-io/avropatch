@@ -17,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class OperationSerializationTester extends SerializationTester<Operation> {
 
-    private static final Map<Class<? extends Operation>, Schema> schemata = new ImmutableMap.Builder()
+    private static final Map<Class<? extends Operation>, Schema> SCHEMATA = new ImmutableMap.Builder()
             .put(Add.class, OperationTypes.Add.create(VALUE_TYPE_UNION))
             .put(Copy.class, OperationTypes.Copy.create())
             .put(Move.class, OperationTypes.Move.create())
@@ -27,7 +27,7 @@ public class OperationSerializationTester extends SerializationTester<Operation>
             .build();
 
     public OperationSerializationTester(Class<? extends Operation> clazz) {
-        super(schemata.get(clazz));
+        super(SCHEMATA.get(clazz));
     }
 
     public static List<Operation> createSomeOperations(Function<Object, Operation> operationFunction) {

@@ -4,22 +4,21 @@ import io.datanerds.avropatch.operation.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 enum OperationGenerator {
 
-    @SuppressWarnings("unchecked")
-    ADD(() -> new Add(generatePath(), generateValue())),
+    ADD(() -> new Add<>(generatePath(), generateValue())),
     COPY(() -> new Copy(generatePath(), generatePath())),
     MOVE(() -> new Move(generatePath(), generatePath())),
     REMOVE(() -> new Remove(generatePath())),
     REPLACE(() -> new Replace<>(generatePath(), generateValue())),
-    @SuppressWarnings("unchecked")
-    TEST(() -> new io.datanerds.avropatch.operation.Test(generatePath(), generateValue()));
+    TEST(() -> new io.datanerds.avropatch.operation.Test<>(generatePath(), generateValue()));
 
     private static final Random random = new Random();
     private static final int MAX_LIST_SIZE = 50;
@@ -29,9 +28,8 @@ enum OperationGenerator {
         this.operationSupplier = operationSupplier;
     }
 
-    public static Operation generate() {
-        OperationGenerator operationType = values()[random.nextInt(values().length)];
-        return operationType.generateOperation();
+    public static Operation generateOperation() {
+        return values()[random.nextInt(values().length)].getOperation();
     }
 
     private static Object generateValue() { return ValueType.generateObject(); }
@@ -40,7 +38,7 @@ enum OperationGenerator {
         return Path.of("hello", "world");
     }
 
-    private Operation generateOperation() {
+    private Operation getOperation() {
         return operationSupplier.get();
     }
 
@@ -65,24 +63,25 @@ enum OperationGenerator {
         }
 
         public static Object generateObject() {
-            ValueType type = ValueType.values()[random.nextInt(ValueType.values().length)];
             if (random.nextBoolean()) {
-                return type.generate();
-            } else {
-                return generateList(type);
+                return generateList(randomValueType());
             }
-        }
-
-        private static List<?> generateList(ValueType type) {
-            List<Object> data = new ArrayList<>();
-            for (int i = 0; i < MAX_LIST_SIZE; i++) {
-                data.add(type.generate());
-            }
-            return data;
+            return randomValueType().generate();
         }
 
         private Object generate() {
             return valueSupplier.get();
+        }
+
+        private static ValueType randomValueType() {
+            return values()[random.nextInt(ValueType.values().length)];
+        }
+
+        private static List<?> generateList(ValueType type) {
+            return IntStream
+                    .range(0, MAX_LIST_SIZE)
+                    .mapToObj(i -> type.generate())
+                    .collect(Collectors.toList());
         }
 
         private static String randomString() {
@@ -90,7 +89,7 @@ enum OperationGenerator {
         }
 
         private static BigDecimal randomBigDecimal() {
-            BigInteger unscaledValue= new BigInteger(random.nextInt(256), random);
+            BigInteger unscaledValue = new BigInteger(random.nextInt(256), random);
             int numberOfDigits = getDigitCount(unscaledValue);
             int scale = random.nextInt(numberOfDigits + 1);
             return new BigDecimal(unscaledValue, scale);

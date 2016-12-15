@@ -12,7 +12,9 @@ public final class AvroData extends ReflectData {
             new DateConversion(),
             new BigIntegerConversion(),
             new BigDecimalConversion(),
-            new UUIDConversion());
+            new UUIDConversion()
+    );
+
     private static final AvroData INSTANCE = new AvroData();
 
     private AvroData() {

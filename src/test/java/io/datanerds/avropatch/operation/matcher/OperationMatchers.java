@@ -46,9 +46,11 @@ public final class OperationMatchers {
     }
 
     public static <T extends Operation> Matcher<Iterable<T>> hasItems(List<T> items) {
-        return allOf(items.stream()
-                .map(item -> hasItem(item))
-                .collect(Collectors.toList()));
+        return allOf(
+                items.stream()
+                        .map(OperationMatchers::hasItem)
+                        .collect(Collectors.toList())
+        );
     }
 
     public static <T extends Operation> Matcher<List<T>> hasItemsOrdered(List<T> expected) {

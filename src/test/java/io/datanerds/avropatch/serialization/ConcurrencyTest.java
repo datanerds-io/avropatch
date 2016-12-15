@@ -84,7 +84,7 @@ public class ConcurrencyTest {
         for (int i = 0; i < NUMBER_OF_PATCHES; i++) {
             Patch patch = new Patch();
             for (int j = 0; j < random.nextInt(MAX_PATCH_SIZE); j++) {
-                patch.addOperation(OperationGenerator.generate());
+                patch.addOperation(OperationGenerator.generateOperation());
             }
             patches.add(patch);
         }

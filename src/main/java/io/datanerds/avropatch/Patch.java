@@ -29,8 +29,7 @@ public class Patch {
     }
 
     public Patch(List<Operation> operations) {
-        this.operations = new ArrayList<>(operations);
-        this.headers = new HashMap<>();
+        this(new ArrayList<>(operations), new HashMap<>());
     }
 
     public Patch(List<Operation> operations, Map<String, ?> headers) {
