@@ -15,7 +15,7 @@ public final class Replace<T> implements Operation {
     @AvroSchema(DefaultSchema.VALUE)
     public final T value;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // no arg constructor needed by Avro
     private Replace() {
         this(null, null);
     }

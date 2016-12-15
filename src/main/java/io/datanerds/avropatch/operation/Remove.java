@@ -12,7 +12,7 @@ public final class Remove implements Operation {
     public static final String op = "remove";
     public final Path path;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // no arg constructor needed by Avro
     private Remove() {
         this(null);
     }

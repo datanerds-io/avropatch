@@ -13,7 +13,7 @@ public final class Copy implements Operation {
     public final Path from;
     public final Path path;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // no arg constructor needed by Avro
     private Copy() {
         this(null, null);
     }

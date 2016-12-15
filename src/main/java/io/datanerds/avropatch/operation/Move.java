@@ -13,7 +13,7 @@ public final class Move implements Operation {
     public final Path from;
     public final Path path;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // no arg constructor needed by Avro
     private Move() {
         this(null, null);
     }
