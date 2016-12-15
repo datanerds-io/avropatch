@@ -8,10 +8,11 @@ import java.util.List;
 
 public final class AvroData extends ReflectData {
 
-    public static List<Conversion<?>> CONVERTERS =
-            ImmutableList.of(new DateConversion(), new BigIntegerConversion(), new BigDecimalConversion(),
-                    new UUIDConversion());
-
+    public static final List<Conversion<?>> CONVERTERS = ImmutableList.of(
+            new DateConversion(),
+            new BigIntegerConversion(),
+            new BigDecimalConversion(),
+            new UUIDConversion());
     private static final AvroData INSTANCE = new AvroData();
 
     private AvroData() {

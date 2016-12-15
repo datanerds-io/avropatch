@@ -8,6 +8,7 @@ import org.hamcrest.core.IsCollectionContaining;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.core.AllOf.allOf;
 
@@ -45,12 +46,9 @@ public final class OperationMatchers {
     }
 
     public static <T extends Operation> Matcher<Iterable<T>> hasItems(List<T> items) {
-        List<Matcher<? super Iterable<T>>> all = new ArrayList<Matcher<? super Iterable<T>>>(items.size());
-        for (T element : items) {
-            all.add(hasItem(element));
-        }
-
-        return allOf(all);
+        return allOf(items.stream()
+                .map(item -> hasItem(item))
+                .collect(Collectors.toList()));
     }
 
     public static <T extends Operation> Matcher<List<T>> hasItemsOrdered(List<T> expected) {

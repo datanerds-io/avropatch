@@ -33,8 +33,8 @@ public final class CustomTypeSerializer {
 
     private CustomTypeSerializer(Schema schema) {
         Objects.nonNull(schema);
-        writer = AvroData.get().createDatumWriter(schema);
-        reader = AvroData.get().createDatumReader(schema);
+        this.writer = AvroData.get().createDatumWriter(schema);
+        this.reader = AvroData.get().createDatumReader(schema);
     }
 
     public byte[] toBytes(Patch value) throws IOException {
@@ -49,10 +49,10 @@ public final class CustomTypeSerializer {
     }
 
     public static class Builder {
-        final List<Schema> types = new ArrayList<>();
+        protected final List<Schema> types;
 
         public Builder() {
-            AvroData.get();
+            this.types = new ArrayList<>();
         }
 
         public Builder nullable() {

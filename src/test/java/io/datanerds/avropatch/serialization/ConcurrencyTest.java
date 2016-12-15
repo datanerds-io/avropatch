@@ -72,9 +72,7 @@ public class ConcurrencyTest {
         futures.stream().forEach(future -> {
             try {
                 verify(PATCHES, future.get());
-            } catch (InterruptedException ex) {
-                logger.warn("Serialization thread failed.", ex);
-            } catch (ExecutionException ex) {
+            } catch (InterruptedException | ExecutionException ex) {
                 logger.warn("Serialization thread failed.", ex);
             }
         });

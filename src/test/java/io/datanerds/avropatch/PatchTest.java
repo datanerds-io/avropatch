@@ -88,7 +88,8 @@ public class PatchTest {
 
     @Test
     public void serializesBunchOfOperations() throws IOException {
-        Patch patch = new Patch(ImmutableList.of(new Add<>(Path.of("person", "name"), "John Doe"),
+        Patch patch = new Patch(ImmutableList.of(
+                new Add<>(Path.of("person", "name"), "John Doe"),
                 new Copy(Path.parse("/person/firstName"), Path.parse("/person/lastName")),
                 new Move(Path.parse("/person/firstName"), Path.parse("/person/lastName")),
                 new Remove(Path.parse("/person/name")),
@@ -103,7 +104,8 @@ public class PatchTest {
     public void serializesDefaultValueTypes() throws IOException {
         Date date = new Date();
         UUID uuid = UUID.randomUUID();
-        Patch patch = new Patch(ImmutableList.of(new Add<>(Path.of("some", "value"), "John Doe"),
+        Patch patch = new Patch(ImmutableList.of(
+                new Add<>(Path.of("some", "value"), "John Doe"),
                 new Add<>(Path.of("some", "value"), 42),
                 new Add<>(Path.of("some", "value"), 42L),
                 new Add<>(Path.of("some", "value"), uuid),
@@ -118,19 +120,28 @@ public class PatchTest {
     }
 
     @Test
-    public void serializesArbitraryHeaders() throws IOException {
-        Patch patch = new Patch(Collections.EMPTY_LIST, ImmutableMap.of("header 1", UUID.randomUUID(),
-                "header 2", new Date(), "header 3", 1234L, "header 4", new BigDecimal("3214123453.123512345")));
-
+    public void serializesArbitraryHeadersWithoutOperations() throws IOException {
+        Patch patch = new Patch(Collections.EMPTY_LIST,
+                ImmutableMap.of(
+                        "header 1", UUID.randomUUID(),
+                        "header 2", new Date(),
+                        "header 3", 1234L,
+                        "header 4", new BigDecimal("3214123453.123512345")));
         byte[] bytes = patch.toBytes();
         assertThat(patch, is(equalTo(Patch.of(bytes))));
+    }
 
-        patch = new Patch(ImmutableList.of(new Copy(Path.of("from", "here"), Path.of("to", "there")),
-                new Move(Path.of("from", "here"), Path.of("to", "there"))),
-                ImmutableMap.of("header 1", UUID.randomUUID(),
-                        "header 2", new Date(), "header 3", 1234L, "header 4", new BigDecimal("3214123453.123512345")));
-
-        bytes = patch.toBytes();
+    @Test
+    public void serializesArbitraryHeadersWithOperations() throws IOException {
+        Patch patch = new Patch(ImmutableList.of(
+                    new Copy(Path.of("from", "here"), Path.of("to", "there")),
+                    new Move(Path.of("from", "here"), Path.of("to", "there"))),
+                ImmutableMap.of(
+                        "header 1", UUID.randomUUID(),
+                        "header 2", new Date(),
+                        "header 3", 1234L,
+                        "header 4", new BigDecimal("3214123453.123512345")));
+        byte[] bytes = patch.toBytes();;
         assertThat(patch, is(equalTo(Patch.of(bytes))));
     }
 

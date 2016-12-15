@@ -25,8 +25,7 @@ public class Patch {
     private final List<Operation> operations;
 
     public Patch() {
-        operations = new ArrayList<>();
-        headers = new HashMap<>();
+        this(new ArrayList<>(), new HashMap<>());
     }
 
     public Patch(List<Operation> operations) {

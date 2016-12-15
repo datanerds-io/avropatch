@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * This class converts an {@link BigDecimal} value into am Avro {@link IndexedRecord} and back. It depends on
+ * This class converts a {@link BigDecimal} value into an Avro {@link IndexedRecord} and back. It depends on
  * {@link BigIntegerConversion} since it serializes the {@link BigDecimal}s unscaled value into a {@link BigInteger} and
  * its scale into an {@link Integer}.
  * Also, its logical type is statically registered in {@link LogicalTypes}, because it introduces a new custom type name

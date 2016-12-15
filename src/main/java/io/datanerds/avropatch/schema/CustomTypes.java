@@ -31,9 +31,7 @@ public interface CustomTypes {
 
     interface PatchType {
         String NAME = Patch.class.getSimpleName();
-        String DOC = "This record represents a JSON PATCH operation holding a sequence of operations to apply to a"
-                + " given object.";
-
+        String DOC = "This record represents a PATCH holding a sequence of operations to apply to a given object.";
         static Schema create(Schema valueSchema) {
             Schema.Field operations = new Schema.Field("operations",
                     Schema.createArray(OperationTypes.Operation.create(valueSchema)),
