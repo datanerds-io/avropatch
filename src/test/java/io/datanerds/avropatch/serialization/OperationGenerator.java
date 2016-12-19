@@ -28,7 +28,7 @@ enum OperationGenerator {
         this.operationSupplier = operationSupplier;
     }
 
-    public static Operation generateOperation() {
+    public static Operation randomOperation() {
         return values()[random.nextInt(values().length)].getOperation();
     }
 

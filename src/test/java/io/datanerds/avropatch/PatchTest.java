@@ -23,8 +23,7 @@ public class PatchTest {
 
     @Test
     public void serializesAdd() throws IOException {
-        Patch patch = new Patch();
-        patch.addOperation(new Add<>(Path.of("person", "name"), "John Doe"));
+        Patch patch = patchOf(new Add<>(Path.of("person", "name"), "John Doe"));
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
@@ -34,8 +33,7 @@ public class PatchTest {
 
     @Test
     public void serializesCopy() throws IOException {
-        Patch patch = new Patch();
-        patch.addOperation(new Copy(Path.parse("/person/firstName"), Path.parse("/person/lastName")));
+        Patch patch = patchOf(new Copy(Path.parse("/person/firstName"), Path.parse("/person/lastName")));
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
@@ -45,8 +43,7 @@ public class PatchTest {
 
     @Test
     public void serializesMove() throws IOException {
-        Patch patch = new Patch();
-        patch.addOperation(new Move(Path.parse("/person/firstName"), Path.parse("/person/lastName")));
+        Patch patch = patchOf(new Move(Path.parse("/person/firstName"), Path.parse("/person/lastName")));
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
@@ -56,8 +53,7 @@ public class PatchTest {
 
     @Test
     public void serializesRemove() throws IOException {
-        Patch patch = new Patch();
-        patch.addOperation(new Remove(Path.parse("/person/name")));
+        Patch patch = patchOf(new Remove(Path.parse("/person/name")));
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
@@ -67,8 +63,7 @@ public class PatchTest {
 
     @Test
     public void serializesReplace() throws IOException {
-        Patch patch = new Patch();
-        patch.addOperation(new Replace(Path.parse("/person/number"), 42));
+        Patch patch = patchOf(new Replace(Path.parse("/person/number"), 42));
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
@@ -77,8 +72,7 @@ public class PatchTest {
 
     @Test
     public void serializesTest() throws IOException {
-        Patch patch = new Patch();
-        patch.addOperation(new io.datanerds.avropatch.operation.Test(Path.parse("/person/number"), 42L));
+        Patch patch = patchOf(new io.datanerds.avropatch.operation.Test(Path.parse("/person/number"), 42L));
         byte[] bytes = patch.toBytes();
 
         List<Operation> operations = Patch.of(bytes).getOperations();
@@ -145,4 +139,7 @@ public class PatchTest {
         assertThat(patch, is(equalTo(Patch.of(bytes))));
     }
 
+    private <T extends Operation> Patch patchOf(T operation) {
+        return new Patch(ImmutableList.of(operation));
+    }
 }

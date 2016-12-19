@@ -42,11 +42,14 @@ public interface CustomTypes {
 
     interface BigDecimalType {
         String NAME = "big-decimal";
-        String DOC = "BigDecimal value represented via it's scale and unscaled value.";
+        String DOC = "BigDecimal value represented via its scale and unscaled value.";
         LogicalType LOGICAL_TYPE = new LogicalType(NAME);
-        Schema RECORD = SchemaBuilder.record("decimal").doc(DOC).fields()
-                .name("unscaledValue").type(BigIntegerType.SCHEMA).noDefault()
-                .name("scale").type(Schema.create(Type.INT)).noDefault()
+        Schema RECORD = SchemaBuilder
+                .record("decimal")
+                    .doc(DOC)
+                    .fields()
+                        .name("unscaledValue").type(BigIntegerType.SCHEMA).noDefault()
+                        .name("scale").type(Schema.create(Type.INT)).noDefault()
                 .endRecord();
 
         Schema SCHEMA = LOGICAL_TYPE.addToSchema(RECORD);
@@ -56,7 +59,6 @@ public interface CustomTypes {
         String NAME = "big-integer";
         LogicalType LOGICAL_TYPE = new LogicalType(NAME);
         Schema SCHEMA = LOGICAL_TYPE.addToSchema(Schema.create(Type.BYTES));
-
     }
 
     interface DateType {
@@ -69,7 +71,7 @@ public interface CustomTypes {
 
     interface UuidType {
         String NAME = LogicalTypes.uuid().getName();
-        String DOC = "UUID serialized via two long values: It's most significant and least significant 64 bits.";
+        String DOC = "UUID serialized via two long values: Its most significant and least significant 64 bits.";
         int SIZE = 2 * Long.BYTES;
         Schema SCHEMA = LogicalTypes.uuid().addToSchema(Schema.createFixed(NAME, DOC, null, SIZE));
     }
@@ -77,8 +79,12 @@ public interface CustomTypes {
     interface Path {
         String NAME = io.datanerds.avropatch.operation.Path.class.getSimpleName();
         String DOC = "JSON Path serialized as String array holding its parts.";
-        Schema SCHEMA = SchemaBuilder.record(NAME).doc(DOC).namespace(NAMESPACE).fields()
-                .name("parts").type(Schema.createArray(Schema.create(Type.STRING))).noDefault()
+        Schema SCHEMA = SchemaBuilder
+                .record(NAME)
+                    .doc(DOC)
+                    .namespace(NAMESPACE)
+                    .fields()
+                        .name("parts").type(Schema.createArray(Schema.create(Type.STRING))).noDefault()
                 .endRecord();
     }
 

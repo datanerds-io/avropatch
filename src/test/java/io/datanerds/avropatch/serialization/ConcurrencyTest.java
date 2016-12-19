@@ -2,6 +2,7 @@ package io.datanerds.avropatch.serialization;
 
 import com.google.common.collect.ImmutableList;
 import io.datanerds.avropatch.Patch;
+import io.datanerds.avropatch.operation.Operation;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -44,22 +45,7 @@ public class ConcurrencyTest {
 
         List<Future<List<Patch>>> futures = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-            futures.add(executorService.submit(() -> {
-                List<Patch> output = new ArrayList<>();
-                List<Patch> input = ImmutableList.copyOf(PATCHES);
-                try {
-                    startThreadsLatch.await();
-                    for (Patch patch : input) {
-                        byte[] bytes = SERIALIZER.toBytes(patch);
-                        output.add(SERIALIZER.toObject(bytes));
-                    }
-                } catch (Exception ex) {
-                    logger.warn("Serialization thread failed.", ex);
-                } finally {
-                    threadsFinishedLatch.countDown();
-                }
-                return output;
-            }));
+            futures.add(executorService.submit(() -> reserializePatches(startThreadsLatch, threadsFinishedLatch)));
         }
 
         logger.info("Releasing {} serialization threads", NUMBER_OF_THREADS);
@@ -78,15 +64,33 @@ public class ConcurrencyTest {
         });
     }
 
+    private List<Patch> reserializePatches(CountDownLatch startThreadsLatch, CountDownLatch threadsFinishedLatch) {
+        List<Patch> output = new ArrayList<>();
+        List<Patch> input = ImmutableList.copyOf(PATCHES);
+        try {
+            startThreadsLatch.await();
+            for (Patch patch : input) {
+                byte[] bytes = SERIALIZER.toBytes(patch);
+                output.add(SERIALIZER.toObject(bytes));
+            }
+        } catch (Exception ex) {
+            logger.warn("Serialization thread failed.", ex);
+        } finally {
+            threadsFinishedLatch.countDown();
+        }
+        return output;
+
+    }
+
     private static List<Patch> generateData() {
         Random random = new Random();
         List<Patch> patches = new ArrayList<>();
         for (int i = 0; i < NUMBER_OF_PATCHES; i++) {
-            Patch patch = new Patch();
+            List<Operation> operations = new ArrayList<>();
             for (int j = 0; j < random.nextInt(MAX_PATCH_SIZE); j++) {
-                patch.addOperation(OperationGenerator.generateOperation());
+                operations.add(OperationGenerator.randomOperation());
             }
-            patches.add(patch);
+            patches.add(new Patch(operations));
         }
         return patches;
     }

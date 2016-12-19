@@ -68,7 +68,7 @@ public interface OperationTypes {
         static Schema create(Schema valueSchema) {
             Field path = new Field("path", Path.SCHEMA, "Path pointing out where the JSON value should be replaced",
                     NO_DEFAULT);
-            Field value = new Field("value", valueSchema, "Actual value to replaced in patched object", NO_DEFAULT);
+            Field value = new Field("value", valueSchema, "Actual value to be replaced in patched object", NO_DEFAULT);
             return createRecord(NAME, DOC, NAMESPACE, false, Arrays.asList(path, value));
         }
     }
@@ -80,7 +80,7 @@ public interface OperationTypes {
         static Schema create(Schema valueSchema) {
             Field path = new Field("path", Path.SCHEMA, "Path pointing out which JSON value should be tested against",
                     NO_DEFAULT);
-            Field value = new Field("value", valueSchema, "Actual value to test< against", NO_DEFAULT);
+            Field value = new Field("value", valueSchema, "Actual value to test against", NO_DEFAULT);
             return createRecord(NAME, DOC, NAMESPACE, false, Arrays.asList(path, value));
         }
     }

@@ -7,6 +7,7 @@ import org.apache.avro.Schema;
 import org.apache.avro.io.*;
 import org.apache.avro.reflect.AvroSchema;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -16,6 +17,7 @@ import java.util.*;
  *
  * @see <a href="https://tools.ietf.org/html/rfc6902">https://tools.ietf.org/html/rfc6902</a>
  */
+@ThreadSafe
 public class Patch {
 
     private static final PatchSerializer SERIALIZER = new PatchSerializer();
@@ -24,21 +26,18 @@ public class Patch {
     private final Map<String, ?> headers;
     private final List<Operation> operations;
 
-    public Patch() {
+    @SuppressWarnings("unused") // no arg constructor needed by Avro
+    private Patch() {
         this(new ArrayList<>(), new HashMap<>());
     }
 
     public Patch(List<Operation> operations) {
-        this(new ArrayList<>(operations), new HashMap<>());
+        this(operations, Collections.EMPTY_MAP);
     }
 
     public Patch(List<Operation> operations, Map<String, ?> headers) {
         this.operations = new ArrayList<>(operations);
         this.headers = new HashMap<>(headers);
-    }
-
-    public boolean addOperation(Operation operation) {
-        return operations.add(operation);
     }
 
     public List<Operation> getOperations() {
