@@ -1,6 +1,5 @@
 package io.datanerds.avropatch.operation;
 
-import org.apache.avro.reflect.AvroIgnore;
 import org.apache.avro.reflect.AvroSchema;
 
 /**
@@ -10,13 +9,11 @@ import org.apache.avro.reflect.AvroSchema;
  * @param <T> DefaultSchema type of <i>add</i> operation
  */
 public final class Add<T> implements Operation {
-    @AvroIgnore
-    public static final String op = "add";
     public final Path path;
     @AvroSchema(DefaultSchema.VALUE)
     public final T value;
 
-    @SuppressWarnings("unused") // no arg constructor needed by Avro
+    @SuppressWarnings("unused") // no-arg constructor needed by Avro
     private Add() {
         this(null, null);
     }

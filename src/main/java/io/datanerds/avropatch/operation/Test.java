@@ -1,6 +1,5 @@
 package io.datanerds.avropatch.operation;
 
-import org.apache.avro.reflect.AvroIgnore;
 import org.apache.avro.reflect.AvroSchema;
 
 /**
@@ -9,13 +8,11 @@ import org.apache.avro.reflect.AvroSchema;
  * @see <a href="https://tools.ietf.org/html/rfc6902#section-4.6">https://tools.ietf.org/html/rfc6902#section-4.6</a>
  */
 public final class Test<T> implements Operation {
-    @AvroIgnore
-    public static final String op = "test";
     public final Path path;
     @AvroSchema(DefaultSchema.VALUE)
     public final T value;
 
-    @SuppressWarnings("unused") // no arg constructor needed by Avro
+    @SuppressWarnings("unused") // no-arg constructor needed by Avro
     private Test() {
         this(null, null);
     }
