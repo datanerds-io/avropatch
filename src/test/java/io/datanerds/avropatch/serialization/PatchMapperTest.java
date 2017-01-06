@@ -18,19 +18,19 @@ import static io.datanerds.avropatch.operation.matcher.PatchMatcher.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class CustomTypeSerializerTest {
+public class PatchMapperTest {
 
     @Test
     public void withCustomTypes() throws IOException {
-        CustomTypeSerializer serializer = new CustomTypeSerializer.Builder().withCustomTypes().build();
+        PatchMapper serializer = new PatchMapper.Builder().withCustomTypes().build();
         Patch patch = new Patch(ImmutableList.of(new Add(Path.of("hello"), new BigDecimal("23946712384.49879324"))));
         byte[] bytes = serializer.toBytes(patch);
-        assertThat(patch, is(equalTo(serializer.toObject(bytes))));
+        assertThat(patch, is(equalTo(serializer.toPatch(bytes))));
     }
 
     @Test
     public void withCustomClass() throws IOException {
-        CustomTypeSerializer serializer = new CustomTypeSerializer.Builder()
+        PatchMapper serializer = new PatchMapper.Builder()
                 .withArray()
                     .nullable()
                     .withPrimitives()
@@ -41,13 +41,13 @@ public class CustomTypeSerializerTest {
         Patch patch = new Patch(ImmutableList.of(
                 new Replace(Path.of("hello"), new Bimmel("string", 42, UUID.randomUUID(), new Bimmel.Bommel("Gaga")))));
         byte[] bytes = serializer.toBytes(patch);
-        assertThat(patch, is(equalTo(serializer.toObject(bytes))));
+        assertThat(patch, is(equalTo(serializer.toPatch(bytes))));
     }
 
 
     @Test
     public void withMultipleOperations() throws IOException {
-        CustomTypeSerializer serializer = new CustomTypeSerializer.Builder()
+        PatchMapper serializer = new PatchMapper.Builder()
                 .withArray()
                     .withPrimitives()
                     .withCustomTypes()
@@ -64,6 +64,6 @@ public class CustomTypeSerializerTest {
                 new Add(Path.of("oO"), ImmutableList.of(new BigInteger("897696124"), 42, new BigInteger("4796923435"))),
                 new Replace(Path.of("lol"), ImmutableList.of(new Date(), new Date(), new Date()))));
         byte[] bytes = serializer.toBytes(patch);
-        assertThat(patch, is(equalTo(serializer.toObject(bytes))));
+        assertThat(patch, is(equalTo(serializer.toPatch(bytes))));
     }
 }

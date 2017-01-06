@@ -24,7 +24,7 @@ public class ConcurrencyTest {
     private static final int MAX_PATCH_SIZE = 50;
     private static final List<Patch> PATCHES = Collections.unmodifiableList(generateData());
 
-    private static final CustomTypeSerializer SERIALIZER = new CustomTypeSerializer.Builder()
+    private static final PatchMapper SERIALIZER = new PatchMapper.Builder()
             .withArray()
                 .withPrimitives()
                 .withCustomTypes()
@@ -71,7 +71,7 @@ public class ConcurrencyTest {
             startThreadsLatch.await();
             for (Patch patch : input) {
                 byte[] bytes = SERIALIZER.toBytes(patch);
-                output.add(SERIALIZER.toObject(bytes));
+                output.add(SERIALIZER.toPatch(bytes));
             }
         } catch (Exception ex) {
             logger.warn("Serialization thread failed.", ex);

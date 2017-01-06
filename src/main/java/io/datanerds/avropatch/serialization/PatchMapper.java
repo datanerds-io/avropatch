@@ -18,20 +18,22 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static io.datanerds.avropatch.value.type.PrimitiveType.*;
 
 @ThreadSafe
-public final class CustomTypeSerializer {
+public final class PatchMapper {
 
-    private static Logger logger = LoggerFactory.getLogger(CustomTypeSerializer.class);
+    private static Logger logger = LoggerFactory.getLogger(PatchMapper.class);
 
     private final DatumWriter<Patch> writer;
     private final DatumReader<Patch> reader;
 
-    private CustomTypeSerializer(Schema schema) {
-        Objects.nonNull(schema);
+    public PatchMapper() {
+        this(AvroData.get().getSchema(Patch.class));
+    }
+
+    private PatchMapper(Schema schema) {
         this.writer = AvroData.get().createDatumWriter(schema);
         this.reader = AvroData.get().createDatumReader(schema);
     }
@@ -43,7 +45,7 @@ public final class CustomTypeSerializer {
         return outputStream.toByteArray();
     }
 
-    public Patch toObject(byte[] bytes) throws IOException {
+    public Patch toPatch(byte[] bytes) throws IOException {
         return reader.read(null, DecoderFactory.get().binaryDecoder(bytes, null));
     }
 
@@ -80,10 +82,10 @@ public final class CustomTypeSerializer {
             return this;
         }
 
-        public CustomTypeSerializer build() {
+        public PatchMapper build() {
             Schema schema = makeSchema();
             logger.debug("Created serializer for schema {}", schema);
-            return new CustomTypeSerializer(schema);
+            return new PatchMapper(schema);
         }
 
         private Schema makeSchema() {
