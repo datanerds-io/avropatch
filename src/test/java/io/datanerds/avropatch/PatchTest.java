@@ -135,7 +135,7 @@ public class PatchTest {
                         "header 2", new Date(),
                         "header 3", 1234L,
                         "header 4", new BigDecimal("3214123453.123512345")));
-        byte[] bytes = patch.toBytes();;
+        byte[] bytes = patch.toBytes();
         assertThat(patch, is(equalTo(Patch.of(bytes))));
     }
 

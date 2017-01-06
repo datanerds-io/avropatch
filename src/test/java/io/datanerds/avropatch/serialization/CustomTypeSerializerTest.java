@@ -36,7 +36,7 @@ public class CustomTypeSerializerTest {
                     .withPrimitives()
                     .withCustomTypes()
                 .endArray()
-                .with(Bimmel.class)
+                .withType(Bimmel.class)
                 .build();
         Patch patch = new Patch(ImmutableList.of(
                 new Replace(Path.of("hello"), new Bimmel("string", 42, UUID.randomUUID(), new Bimmel.Bommel("Gaga")))));
@@ -54,7 +54,7 @@ public class CustomTypeSerializerTest {
                 .endArray()
                 .nullable()
                 .withPrimitives()
-                .with(Bimmel.class)
+                .withType(Bimmel.class)
                 .build();
         Patch patch = new Patch(ImmutableList.of(
                 new io.datanerds.avropatch.operation.Test(Path.of("hello", "world"), null),

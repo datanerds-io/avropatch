@@ -29,11 +29,11 @@ public class ConcurrencyTest {
                 .withPrimitives()
                 .withCustomTypes()
                 .nullable()
-                .with(Bimmel.class)
+                .withType(Bimmel.class)
             .endArray()
                 .withPrimitives()
                 .withCustomTypes()
-                .with(Bimmel.class)
+                .withType(Bimmel.class)
                 .nullable()
             .build();
 

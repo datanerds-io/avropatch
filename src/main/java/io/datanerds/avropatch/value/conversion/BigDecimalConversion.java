@@ -1,6 +1,6 @@
 package io.datanerds.avropatch.value.conversion;
 
-import io.datanerds.avropatch.schema.CustomTypes.BigDecimalType;
+import io.datanerds.avropatch.value.type.BigDecimalType;
 import org.apache.avro.Conversion;
 import org.apache.avro.LogicalType;
 import org.apache.avro.LogicalTypes;
@@ -21,15 +21,15 @@ import java.math.BigInteger;
  * @see BigIntegerConversion
  * @see LogicalTypes
  */
-public class BigDecimalConversion extends Conversion<BigDecimal> {
+public class BigDecimalConversion extends Conversion<BigDecimal> implements BigDecimalType {
 
     static {
-        LogicalTypes.register(BigDecimalType.NAME, schema -> BigDecimalType.LOGICAL_TYPE);
+        LogicalTypes.register(NAME, schema -> LOGICAL_TYPE);
     }
 
     @Override
     public Schema getRecommendedSchema() {
-        return BigDecimalType.SCHEMA;
+        return SCHEMA;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BigDecimalConversion extends Conversion<BigDecimal> {
 
     @Override
     public String getLogicalTypeName() {
-        return BigDecimalType.NAME;
+        return NAME;
     }
 
     @Override

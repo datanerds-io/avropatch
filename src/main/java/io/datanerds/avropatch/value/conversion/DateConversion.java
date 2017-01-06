@@ -1,6 +1,6 @@
 package io.datanerds.avropatch.value.conversion;
 
-import io.datanerds.avropatch.schema.CustomTypes.DateType;
+import io.datanerds.avropatch.value.type.TimestampType;
 import org.apache.avro.Conversion;
 import org.apache.avro.LogicalType;
 import org.apache.avro.LogicalTypes;
@@ -19,15 +19,15 @@ import java.util.Date;
  * @see org.apache.avro.LogicalTypes.TimestampMillis
  * @see org.apache.avro.Schema.Type
  */
-public class DateConversion extends Conversion<Date> {
+public class DateConversion extends Conversion<Date> implements TimestampType {
 
     static {
-        LogicalTypes.register(DateType.NAME, schema -> DateType.LOGICAL_TYPE);
+        LogicalTypes.register(NAME, schema -> LOGICAL_TYPE);
     }
 
     @Override
     public Schema getRecommendedSchema() {
-        return DateType.SCHEMA;
+        return SCHEMA;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class DateConversion extends Conversion<Date> {
 
     @Override
     public String getLogicalTypeName() {
-        return DateType.NAME;
+        return NAME;
     }
 
     @Override
@@ -45,14 +45,14 @@ public class DateConversion extends Conversion<Date> {
         return new GenericFixed() {
             @Override
             public byte[] bytes() {
-                ByteBuffer buffer = ByteBuffer.allocate(DateType.SIZE);
+                ByteBuffer buffer = ByteBuffer.allocate(SIZE);
                 buffer.putLong(value.getTime());
                 return buffer.array();
             }
 
             @Override
             public Schema getSchema() {
-                return DateType.SCHEMA;
+                return SCHEMA;
             }
         };
     }

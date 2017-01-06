@@ -2,6 +2,11 @@ package io.datanerds.avropatch.schema;
 
 import com.google.common.collect.ImmutableMap;
 import io.datanerds.avropatch.operation.*;
+import io.datanerds.avropatch.serialization.OperationTypes;
+import io.datanerds.avropatch.value.type.BigDecimalType;
+import io.datanerds.avropatch.value.type.BigIntegerType;
+import io.datanerds.avropatch.value.type.TimestampType;
+import io.datanerds.avropatch.value.type.UuidType;
 import org.apache.avro.Schema;
 
 import java.io.IOException;
@@ -11,11 +16,16 @@ import java.util.*;
 import java.util.function.Function;
 
 import static io.datanerds.avropatch.operation.matcher.OperationMatchers.equalTo;
-import static io.datanerds.avropatch.schema.CustomTypes.VALUE_TYPE_UNION;
+import static io.datanerds.avropatch.value.type.PrimitiveType.*;
+import static org.apache.avro.Schema.createUnion;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class OperationSerializationTester extends SerializationTester<Operation> {
+
+    private static final Schema VALUE_TYPE_UNION = createUnion(BOOLEAN.getSchema(), DOUBLE.getSchema(),
+            FLOAT.getSchema(), INTEGER.getSchema(), LONG.getSchema(), NULL.getSchema(), STRING.getSchema(),
+            BigDecimalType.SCHEMA, BigIntegerType.SCHEMA, TimestampType.SCHEMA, UuidType.SCHEMA);
 
     private static final Map<Class<? extends Operation>, Schema> SCHEMATA = new ImmutableMap.Builder()
             .put(Add.class, OperationTypes.Add.create(VALUE_TYPE_UNION))

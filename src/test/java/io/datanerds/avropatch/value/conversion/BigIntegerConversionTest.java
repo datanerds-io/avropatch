@@ -2,7 +2,7 @@ package io.datanerds.avropatch.value.conversion;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import io.datanerds.avropatch.schema.CustomTypes.BigIntegerType;
+import io.datanerds.avropatch.value.type.BigIntegerType;
 import org.apache.avro.Schema;
 import org.junit.Test;
 

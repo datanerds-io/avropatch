@@ -2,7 +2,7 @@ package io.datanerds.avropatch.value.conversion;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import io.datanerds.avropatch.schema.CustomTypes.UuidType;
+import io.datanerds.avropatch.value.type.UuidType;
 import org.apache.avro.Schema;
 import org.junit.Test;
 

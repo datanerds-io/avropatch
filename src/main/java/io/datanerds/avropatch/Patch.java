@@ -1,8 +1,8 @@
 package io.datanerds.avropatch;
 
-import io.datanerds.avropatch.operation.DefaultSchema;
+import io.datanerds.avropatch.value.DefaultSchema;
 import io.datanerds.avropatch.operation.Operation;
-import io.datanerds.avropatch.value.conversion.*;
+import io.datanerds.avropatch.value.AvroData;
 import org.apache.avro.Schema;
 import org.apache.avro.io.*;
 import org.apache.avro.reflect.AvroSchema;
@@ -26,7 +26,7 @@ public class Patch {
     private final Map<String, ?> headers;
     private final List<Operation> operations;
 
-    @SuppressWarnings("unused") // no arg constructor needed by Avro
+    @SuppressWarnings("unused") // no-arg constructor needed by Avro
     private Patch() {
         this(new ArrayList<>(), new HashMap<>());
     }
@@ -49,10 +49,10 @@ public class Patch {
     }
 
     public byte[] toBytes() throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Encoder binaryEncoder = EncoderFactory.get().directBinaryEncoder(outputStream, null);
-        SERIALIZER.writer.write(this, binaryEncoder);
-        return outputStream.toByteArray();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        Encoder encoder = EncoderFactory.get().directBinaryEncoder(output, null);
+        SERIALIZER.writer.write(this, encoder);
+        return output.toByteArray();
     }
 
     public static Patch of(byte[] bytes) throws IOException {
@@ -65,8 +65,8 @@ public class Patch {
 
         private PatchSerializer() {
             Schema schema = AvroData.get().getSchema(Patch.class);
-            writer = AvroData.get().createDatumWriter(schema);
-            reader = AvroData.get().createDatumReader(schema);
+            this.writer = AvroData.get().createDatumWriter(schema);
+            this.reader = AvroData.get().createDatumReader(schema);
         }
     }
 }

@@ -1,4 +1,4 @@
-package io.datanerds.avropatch.operation;
+package io.datanerds.avropatch.value;
 
 /**
  * This interface holds the schema for all valid value types.

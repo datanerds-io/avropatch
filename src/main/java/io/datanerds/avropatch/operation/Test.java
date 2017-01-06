@@ -1,5 +1,6 @@
 package io.datanerds.avropatch.operation;
 
+import io.datanerds.avropatch.value.DefaultSchema;
 import org.apache.avro.reflect.AvroSchema;
 
 /**

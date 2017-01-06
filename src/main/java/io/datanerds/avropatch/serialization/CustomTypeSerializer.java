@@ -1,12 +1,11 @@
 package io.datanerds.avropatch.serialization;
 
 import io.datanerds.avropatch.Patch;
-import io.datanerds.avropatch.schema.CustomTypes;
-import io.datanerds.avropatch.schema.CustomTypes.BigDecimalType;
-import io.datanerds.avropatch.schema.CustomTypes.BigIntegerType;
-import io.datanerds.avropatch.schema.CustomTypes.DateType;
-import io.datanerds.avropatch.schema.CustomTypes.UuidType;
-import io.datanerds.avropatch.value.conversion.AvroData;
+import io.datanerds.avropatch.value.AvroData;
+import io.datanerds.avropatch.value.type.BigDecimalType;
+import io.datanerds.avropatch.value.type.BigIntegerType;
+import io.datanerds.avropatch.value.type.TimestampType;
+import io.datanerds.avropatch.value.type.UuidType;
 import org.apache.avro.Schema;
 import org.apache.avro.io.*;
 import org.slf4j.Logger;
@@ -21,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static io.datanerds.avropatch.schema.PrimitiveTypes.*;
+import static io.datanerds.avropatch.value.type.PrimitiveType.*;
 
 @ThreadSafe
 public final class CustomTypeSerializer {
@@ -56,21 +55,22 @@ public final class CustomTypeSerializer {
         }
 
         public Builder nullable() {
-            types.add(NULL);
+            types.add(NULL.getSchema());
             return this;
         }
 
         public Builder withPrimitives() {
-            types.addAll(Arrays.asList(BOOLEAN, DOUBLE, FLOAT, INTEGER, LONG, STRING));
+            types.addAll(Arrays.asList(BOOLEAN.getSchema(), DOUBLE.getSchema(), FLOAT.getSchema(), INTEGER.getSchema(),
+                    LONG.getSchema(), STRING.getSchema()));
             return this;
         }
 
         public Builder withCustomTypes() {
-            types.addAll(Arrays.asList(BigDecimalType.SCHEMA, BigIntegerType.SCHEMA, DateType.SCHEMA, UuidType.SCHEMA));
+            types.addAll(Arrays.asList(BigDecimalType.SCHEMA, BigIntegerType.SCHEMA, TimestampType.SCHEMA, UuidType.SCHEMA));
             return this;
         }
 
-        public Builder with(Type type) {
+        public Builder withType(Type type) {
             types.add(AvroData.get().getSchema(type));
             return this;
         }
@@ -88,9 +88,9 @@ public final class CustomTypeSerializer {
 
         private Schema makeSchema() {
             if (types.size() == 1) {
-                return CustomTypes.PatchType.create(types.get(0));
+                return PatchType.create(types.get(0));
             } else {
-                return CustomTypes.PatchType.create(Schema.createUnion(types));
+                return PatchType.create(Schema.createUnion(types));
             }
         }
 
@@ -133,8 +133,8 @@ public final class CustomTypeSerializer {
             }
 
             @Override
-            public Builder.ArrayBuilder with(Type type) {
-                super.with(type);
+            public Builder.ArrayBuilder withType(Type type) {
+                super.withType(type);
                 return this;
             }
 

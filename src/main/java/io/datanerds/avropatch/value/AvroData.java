@@ -1,6 +1,10 @@
-package io.datanerds.avropatch.value.conversion;
+package io.datanerds.avropatch.value;
 
 import avro.shaded.com.google.common.collect.ImmutableList;
+import io.datanerds.avropatch.value.conversion.BigDecimalConversion;
+import io.datanerds.avropatch.value.conversion.BigIntegerConversion;
+import io.datanerds.avropatch.value.conversion.DateConversion;
+import io.datanerds.avropatch.value.conversion.UUIDConversion;
 import org.apache.avro.Conversion;
 import org.apache.avro.reflect.ReflectData;
 

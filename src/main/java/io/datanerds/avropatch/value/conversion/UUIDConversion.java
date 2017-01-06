@@ -1,6 +1,6 @@
 package io.datanerds.avropatch.value.conversion;
 
-import io.datanerds.avropatch.schema.CustomTypes.UuidType;
+import io.datanerds.avropatch.value.type.UuidType;
 import org.apache.avro.Conversion;
 import org.apache.avro.LogicalType;
 import org.apache.avro.Schema;
@@ -9,11 +9,11 @@ import org.apache.avro.generic.GenericFixed;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-public class UUIDConversion extends Conversion<UUID> {
+public class UUIDConversion extends Conversion<UUID> implements UuidType {
 
     @Override
     public Schema getRecommendedSchema() {
-        return UuidType.SCHEMA;
+        return SCHEMA;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class UUIDConversion extends Conversion<UUID> {
 
     @Override
     public String getLogicalTypeName() {
-        return UuidType.NAME;
+        return NAME;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UUIDConversion extends Conversion<UUID> {
         return new GenericFixed() {
             @Override
             public byte[] bytes() {
-                ByteBuffer buffer = ByteBuffer.allocate(UuidType.SIZE);
+                ByteBuffer buffer = ByteBuffer.allocate(SIZE);
                 buffer.putLong(value.getLeastSignificantBits());
                 buffer.putLong(value.getMostSignificantBits());
                 return buffer.array();
@@ -39,7 +39,7 @@ public class UUIDConversion extends Conversion<UUID> {
 
             @Override
             public Schema getSchema() {
-                return UuidType.SCHEMA;
+                return SCHEMA;
             }
         };
     }

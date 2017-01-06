@@ -1,6 +1,6 @@
 package io.datanerds.avropatch.value.conversion;
 
-import io.datanerds.avropatch.schema.CustomTypes.BigIntegerType;
+import io.datanerds.avropatch.value.type.BigIntegerType;
 import org.apache.avro.Conversion;
 import org.apache.avro.LogicalType;
 import org.apache.avro.LogicalTypes;
@@ -9,15 +9,15 @@ import org.apache.avro.Schema;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
-public class BigIntegerConversion extends Conversion<BigInteger> {
+public class BigIntegerConversion extends Conversion<BigInteger> implements BigIntegerType {
 
     static {
-        LogicalTypes.register(BigIntegerType.NAME, schema -> BigIntegerType.LOGICAL_TYPE);
+        LogicalTypes.register(NAME, schema -> LOGICAL_TYPE);
     }
 
     @Override
     public Schema getRecommendedSchema() {
-        return BigIntegerType.SCHEMA;
+        return SCHEMA;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class BigIntegerConversion extends Conversion<BigInteger> {
 
     @Override
     public String getLogicalTypeName() {
-        return BigIntegerType.NAME;
+        return NAME;
     }
 
     @Override

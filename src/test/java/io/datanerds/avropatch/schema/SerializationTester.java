@@ -1,6 +1,6 @@
 package io.datanerds.avropatch.schema;
 
-import io.datanerds.avropatch.value.conversion.AvroData;
+import io.datanerds.avropatch.value.AvroData;
 import org.apache.avro.Schema;
 import org.apache.avro.io.*;
 
