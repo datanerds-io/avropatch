@@ -12,6 +12,8 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import static io.datanerds.avropatch.operation.matcher.PatchMatcher.equalTo;
+import static io.datanerds.avropatch.serialization.PatchMapper.arrayBuilder;
+import static io.datanerds.avropatch.serialization.PatchMapper.builder;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,17 +26,17 @@ public class ConcurrencyTest {
     private static final int MAX_PATCH_SIZE = 50;
     private static final List<Patch> PATCHES = Collections.unmodifiableList(generateData());
 
-    private static final PatchMapper SERIALIZER = new PatchMapper.Builder()
-            .withArray()
-                .withPrimitives()
-                .withCustomTypes()
-                .nullable()
-                .withType(Bimmel.class)
-            .endArray()
-                .withPrimitives()
-                .withCustomTypes()
-                .withType(Bimmel.class)
-                .nullable()
+    private static final PatchMapper SERIALIZER = builder()
+            .with(arrayBuilder()
+                    .withAvroPrimitives()
+                    .withCustomTypes()
+                    .nullable()
+                    .withType(Bimmel.class)
+                    .build())
+            .withAvroPrimitives()
+            .withCustomTypes()
+            .withType(Bimmel.class)
+            .nullable()
             .build();
 
     @Test

@@ -22,7 +22,7 @@ public class PatchMapperTest {
 
     @Test
     public void withCustomTypes() throws IOException {
-        PatchMapper serializer = new PatchMapper.Builder().withCustomTypes().build();
+        PatchMapper serializer = PatchMapper.builder().withCustomTypes().build();
         Patch patch = new Patch(ImmutableList.of(new Add(Path.of("hello"), new BigDecimal("23946712384.49879324"))));
         byte[] bytes = serializer.toBytes(patch);
         assertThat(patch, is(equalTo(serializer.toPatch(bytes))));
@@ -30,12 +30,12 @@ public class PatchMapperTest {
 
     @Test
     public void withCustomClass() throws IOException {
-        PatchMapper serializer = new PatchMapper.Builder()
-                .withArray()
-                    .nullable()
-                    .withPrimitives()
-                    .withCustomTypes()
-                .endArray()
+        PatchMapper serializer = PatchMapper.builder()
+                .with(PatchMapper.arrayBuilder()
+                        .nullable()
+                        .withAvroPrimitives()
+                        .withCustomTypes()
+                        .build())
                 .withType(Bimmel.class)
                 .build();
         Patch patch = new Patch(ImmutableList.of(
@@ -47,13 +47,13 @@ public class PatchMapperTest {
 
     @Test
     public void withMultipleOperations() throws IOException {
-        PatchMapper serializer = new PatchMapper.Builder()
-                .withArray()
-                    .withPrimitives()
-                    .withCustomTypes()
-                .endArray()
+        PatchMapper serializer = PatchMapper.builder()
+                .with(PatchMapper.arrayBuilder()
+                        .withAvroPrimitives()
+                        .withCustomTypes()
+                        .build())
                 .nullable()
-                .withPrimitives()
+                .withAvroPrimitives()
                 .withType(Bimmel.class)
                 .build();
         Patch patch = new Patch(ImmutableList.of(

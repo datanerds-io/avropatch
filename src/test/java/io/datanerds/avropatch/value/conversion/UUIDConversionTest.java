@@ -16,7 +16,6 @@ public class UUIDConversionTest {
         ConversionTester
                 .withSchemata(UuidType.SCHEMA)
                 .withConverters(new UUIDConversion())
-                .reserializeAndAssert(UUID.randomUUID())
                 .reserializeAndAssert(UUID.randomUUID());
     }
 
