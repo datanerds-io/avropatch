@@ -44,33 +44,73 @@ public final class PatchMapper {
         return reader.read(null, DecoderFactory.get().binaryDecoder(bytes, null));
     }
 
+    /**
+     * Instantiates a builder for creating a {@link PatchMapper} which may be used as follows.
+     *
+     * <p><blockquote><pre>
+     * PatchMapper mapper = PatchMapper.builder()
+     *          .nullable()
+     *          .withAvroPrimitives()
+     *          .withCustomTypes()
+     *          .build();
+     * Patch patch = new Patch(...);
+     * byte[] bytes = serializer.toBytes(patch);
+     * </pre></blockquote></p>
+     * @see ValueSchemaBuilder
+     * @see PatchMapper
+     * @return the builder instance
+     */
     public static final ValueSchemaBuilder<PatchMapper> builder() {
-        return new Builder();
+        return new ValueSchemaBuilder<>(schema -> new PatchMapper(PatchType.create(schema)));
     }
 
+    /**
+     * Instantiates a builder for creating an Avro {@link Schema} of type {@code array} which may be used for the
+     * generic value of {@link io.datanerds.avropatch.operation.Add}, {@link io.datanerds.avropatch.operation.Replace}
+     * and {@link io.datanerds.avropatch.operation.Test} operations by registering the resulting {@link Schema} to a
+     * {@link PatchMapper}.
+     *
+     * <p><blockquote><pre>
+     * PatchMapper mapper = PatchMapper.builder()
+     *          .with(PatchMapper.arrayBuilder()
+     *                  .nullable()
+     *                  .withAvroPrimitives()
+     *                  .build())
+     *          .build();
+     * Patch patch = new Patch(...);
+     * byte[] bytes = serializer.toBytes(patch);
+     * </pre></blockquote></p>
+     * @see ValueSchemaBuilder
+     * @see Schema
+     * @see #builder()
+     * @return the builder instance
+     */
     public static final ValueSchemaBuilder<Schema> arrayBuilder() {
-        return new ArraySchemaBuilder();
+        return new ValueSchemaBuilder<>(schema -> Schema.createArray(schema));
     }
 
+    /**
+     * Instantiates a builder for creating an Avro {@link Schema} of type {@code map} which may be used for the
+     * generic value of {@link io.datanerds.avropatch.operation.Add}, {@link io.datanerds.avropatch.operation.Replace}
+     * and {@link io.datanerds.avropatch.operation.Test} operations by registering the resulting {@link Schema} to a
+     * {@link PatchMapper}.
+     *
+     * <p><blockquote><pre>
+     * PatchMapper mapper = PatchMapper.builder()
+     *          .with(PatchMapper.mapBuilder()
+     *                  .nullable()
+     *                  .withAvroPrimitives()
+     *                  .build())
+     *          .build();
+     * Patch patch = new Patch(...);
+     * byte[] bytes = serializer.toBytes(patch);
+     * </pre></blockquote></p>
+     * @see ValueSchemaBuilder
+     * @see Schema
+     * @see #builder()
+     * @return the builder instance
+     */
     public static final ValueSchemaBuilder<Schema> mapBuilder() {
-        return new MapSchemaBuilder();
-    }
-
-    private static final class Builder extends ValueSchemaBuilder<PatchMapper> {
-        private Builder() {
-            super(schema -> new PatchMapper(PatchType.create(schema)));
-        }
-    }
-
-    private static class ArraySchemaBuilder extends ValueSchemaBuilder<Schema> {
-        private ArraySchemaBuilder() {
-            super(schema -> Schema.createArray(schema));
-        }
-    }
-
-    private static class MapSchemaBuilder extends ValueSchemaBuilder<Schema> {
-        private MapSchemaBuilder() {
-            super(schema -> Schema.createMap(schema));
-        }
+        return new ValueSchemaBuilder<>(schema -> Schema.createMap(schema));
     }
 }
