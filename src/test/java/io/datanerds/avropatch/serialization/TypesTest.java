@@ -1,13 +1,13 @@
-package io.datanerds.avropatch.schema;
+package io.datanerds.avropatch.serialization;
 
 import io.datanerds.avropatch.operation.*;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static io.datanerds.avropatch.schema.OperationSerializationTester.createSomeOperations;
+import static io.datanerds.avropatch.serialization.OperationSerializationTester.createSomeOperations;
 
-public class OperationTypesTest {
+public class TypesTest {
 
     @Test
     public void add() throws IOException {

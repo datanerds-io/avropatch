@@ -2,7 +2,7 @@ package io.datanerds.avropatch.operation;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.NullPointerTester;
-import io.datanerds.avropatch.exception.InvalidPathException;
+import io.datanerds.avropatch.exception.InvalidReferenceTokenException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,7 +23,9 @@ public class PathTest {
     public void equality() {
         new EqualsTester()
                 .addEqualityGroup(Path.of("hello"), Path.of("hello"), Path.parse("/hello"), Path.parse("/hello/"))
-                .addEqualityGroup(Path.of("hello", "world"), Path.of("hello", "world"), Path.parse("/hello/world"))
+                .addEqualityGroup(Path.of("hello", "world"), Path.of("hello", "world"), Path.parse("/hello/world"),
+                        Path.of("hello").append("world"), Path.of("hello").append(Path.of("world")),
+                        Path.of(Path.of("hello"), Path.of("world")))
                 .addEqualityGroup(Path.of(), Path.parse(SLASH), ROOT)
                 .testEquals();
     }
@@ -41,25 +43,25 @@ public class PathTest {
 
     @Test
     public void noLeadingUnderscores() {
-        expectedException.expect(InvalidPathException.class);
+        expectedException.expect(InvalidReferenceTokenException.class);
         Path.of("_hello_");
     }
 
     @Test
     public void noLeadingDash() {
-        expectedException.expect(InvalidPathException.class);
+        expectedException.expect(InvalidReferenceTokenException.class);
         Path.of("-hello");
     }
 
     @Test
     public void invalidCharacter() {
-        expectedException.expect(InvalidPathException.class);
+        expectedException.expect(InvalidReferenceTokenException.class);
         Path.of("hel!lo");
     }
 
     @Test
     public void emptyPath() {
-        expectedException.expect(InvalidPathException.class);
+        expectedException.expect(InvalidReferenceTokenException.class);
         Path.of("");
     }
 
@@ -77,7 +79,7 @@ public class PathTest {
 
     @Test
     public void parseWithoutSlash() {
-        expectedException.expect(InvalidPathException.class);
+        expectedException.expect(InvalidReferenceTokenException.class);
         expectedException.expectMessage("JSON Path has to start with a slash.");
         Path.parse("hello/");
     }
@@ -110,4 +112,8 @@ public class PathTest {
         assertThat(ROOT.toString(), is(equalTo("/")));
     }
 
+    @Test(expected = InvalidReferenceTokenException.class)
+    public void appendValidates() {
+        ROOT.append(".'!#(^((*(_$,-");
+    }
 }

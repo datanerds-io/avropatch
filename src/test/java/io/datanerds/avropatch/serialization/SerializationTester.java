@@ -1,4 +1,4 @@
-package io.datanerds.avropatch.schema;
+package io.datanerds.avropatch.serialization;
 
 import io.datanerds.avropatch.value.AvroData;
 import org.apache.avro.Schema;

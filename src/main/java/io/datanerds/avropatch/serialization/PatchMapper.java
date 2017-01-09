@@ -46,8 +46,7 @@ public final class PatchMapper {
 
     /**
      * Instantiates a builder for creating a {@link PatchMapper} which may be used as follows.
-     *
-     * <p><blockquote><pre>
+     * <blockquote><pre>
      * PatchMapper mapper = PatchMapper.builder()
      *          .nullable()
      *          .withAvroPrimitives()
@@ -55,13 +54,13 @@ public final class PatchMapper {
      *          .build();
      * Patch patch = new Patch(...);
      * byte[] bytes = serializer.toBytes(patch);
-     * </pre></blockquote></p>
+     * </pre></blockquote>
      * @see ValueSchemaBuilder
      * @see PatchMapper
      * @return the builder instance
      */
     public static final ValueSchemaBuilder<PatchMapper> builder() {
-        return new ValueSchemaBuilder<>(schema -> new PatchMapper(PatchType.create(schema)));
+        return new ValueSchemaBuilder<>(schema -> new PatchMapper(Types.Patch.create(schema)));
     }
 
     /**
@@ -69,8 +68,7 @@ public final class PatchMapper {
      * generic value of {@link io.datanerds.avropatch.operation.Add}, {@link io.datanerds.avropatch.operation.Replace}
      * and {@link io.datanerds.avropatch.operation.Test} operations by registering the resulting {@link Schema} to a
      * {@link PatchMapper}.
-     *
-     * <p><blockquote><pre>
+     * <blockquote><pre>
      * PatchMapper mapper = PatchMapper.builder()
      *          .with(PatchMapper.arrayBuilder()
      *                  .nullable()
@@ -79,7 +77,7 @@ public final class PatchMapper {
      *          .build();
      * Patch patch = new Patch(...);
      * byte[] bytes = serializer.toBytes(patch);
-     * </pre></blockquote></p>
+     * </pre></blockquote>
      * @see ValueSchemaBuilder
      * @see Schema
      * @see #builder()
@@ -94,8 +92,7 @@ public final class PatchMapper {
      * generic value of {@link io.datanerds.avropatch.operation.Add}, {@link io.datanerds.avropatch.operation.Replace}
      * and {@link io.datanerds.avropatch.operation.Test} operations by registering the resulting {@link Schema} to a
      * {@link PatchMapper}.
-     *
-     * <p><blockquote><pre>
+     * <blockquote><pre>
      * PatchMapper mapper = PatchMapper.builder()
      *          .with(PatchMapper.mapBuilder()
      *                  .nullable()
@@ -104,7 +101,7 @@ public final class PatchMapper {
      *          .build();
      * Patch patch = new Patch(...);
      * byte[] bytes = serializer.toBytes(patch);
-     * </pre></blockquote></p>
+     * </pre></blockquote>
      * @see ValueSchemaBuilder
      * @see Schema
      * @see #builder()

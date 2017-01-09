@@ -1,8 +1,7 @@
-package io.datanerds.avropatch.schema;
+package io.datanerds.avropatch.serialization;
 
 import com.google.common.collect.ImmutableMap;
 import io.datanerds.avropatch.operation.*;
-import io.datanerds.avropatch.serialization.OperationTypes;
 import io.datanerds.avropatch.value.type.BigDecimalType;
 import io.datanerds.avropatch.value.type.BigIntegerType;
 import io.datanerds.avropatch.value.type.TimestampType;
@@ -28,12 +27,12 @@ public class OperationSerializationTester extends SerializationTester<Operation>
             BigDecimalType.SCHEMA, BigIntegerType.SCHEMA, TimestampType.SCHEMA, UuidType.SCHEMA);
 
     private static final Map<Class<? extends Operation>, Schema> SCHEMATA = new ImmutableMap.Builder()
-            .put(Add.class, OperationTypes.Add.create(VALUE_TYPE_UNION))
-            .put(Copy.class, OperationTypes.Copy.create())
-            .put(Move.class, OperationTypes.Move.create())
-            .put(Remove.class, OperationTypes.Remove.create())
-            .put(Replace.class, OperationTypes.Replace.create(VALUE_TYPE_UNION))
-            .put(io.datanerds.avropatch.operation.Test.class, OperationTypes.Test.create(VALUE_TYPE_UNION))
+            .put(Add.class, Types.Add.create(VALUE_TYPE_UNION))
+            .put(Copy.class, Types.Copy.create())
+            .put(Move.class, Types.Move.create())
+            .put(Remove.class, Types.Remove.create())
+            .put(Replace.class, Types.Replace.create(VALUE_TYPE_UNION))
+            .put(io.datanerds.avropatch.operation.Test.class, Types.Test.create(VALUE_TYPE_UNION))
             .build();
 
     public OperationSerializationTester(Class<? extends Operation> clazz) {
