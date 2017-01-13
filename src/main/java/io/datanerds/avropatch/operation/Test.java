@@ -1,6 +1,6 @@
 package io.datanerds.avropatch.operation;
 
-import org.apache.avro.reflect.AvroIgnore;
+import io.datanerds.avropatch.value.DefaultSchema;
 import org.apache.avro.reflect.AvroSchema;
 
 /**
@@ -9,15 +9,13 @@ import org.apache.avro.reflect.AvroSchema;
  * @see <a href="https://tools.ietf.org/html/rfc6902#section-4.6">https://tools.ietf.org/html/rfc6902#section-4.6</a>
  */
 public final class Test<T> implements Operation {
-    @AvroIgnore
-    public static final String op = "test";
     public final Path path;
-    @AvroSchema(Value.SCHEMA)
+    @AvroSchema(DefaultSchema.VALUE)
     public final T value;
 
+    @SuppressWarnings("unused") // no-arg constructor needed by Avro
     private Test() {
-        this.path = null;
-        this.value = null;
+        this(null, null);
     }
 
     /**
@@ -25,7 +23,7 @@ public final class Test<T> implements Operation {
      * @param path Path pointing out which JSON value should be tested against
      * @param value Actual value to <i>test</i> against
      *
-     * @see Value
+     * @see DefaultSchema
      */
     public Test(Path path, T value) {
         this.path = path;

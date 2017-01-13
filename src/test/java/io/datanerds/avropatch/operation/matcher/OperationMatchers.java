@@ -1,5 +1,6 @@
 package io.datanerds.avropatch.operation.matcher;
 
+import com.google.common.base.Joiner;
 import io.datanerds.avropatch.operation.*;
 import org.hamcrest.CustomTypeSafeMatcher;
 import org.hamcrest.Matcher;
@@ -7,6 +8,7 @@ import org.hamcrest.core.IsCollectionContaining;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.core.AllOf.allOf;
 
@@ -40,12 +42,33 @@ public final class OperationMatchers {
     }
 
     public static <T extends Operation> Matcher<Iterable<T>> hasItems(T... items) {
-        List<Matcher<? super Iterable<T>>> all = new ArrayList<Matcher<? super Iterable<T>>>(items.length);
-        for (T element : items) {
-            all.add(hasItem(element));
-        }
+        return hasItems(Arrays.asList(items));
+    }
 
-        return allOf(all);
+    public static <T extends Operation> Matcher<Iterable<T>> hasItems(List<T> items) {
+        return allOf(
+                items.stream()
+                        .map(OperationMatchers::hasItem)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    public static <T extends Operation> Matcher<List<T>> hasItemsOrdered(List<T> expected) {
+        return new CustomTypeSafeMatcher<List<T>>(Joiner.on(",").join(expected)) {
+            @Override
+            protected boolean matchesSafely(List<T> value) {
+                if (expected.size() != value.size()) {
+                    return false;
+                }
+                for (int i = 0; i < expected.size(); i++) {
+                    if (!equalTo(expected.get(i)).matches(value.get(i))) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+        };
     }
 
     private static class Matchers {
@@ -56,7 +79,7 @@ public final class OperationMatchers {
                 @Override
                 protected boolean matchesSafely(Add item) {
                     return item.path.equals(expected.path)
-                            && item.value.equals(expected.value);
+                            && compareNullable(expected.value, item.value);
                 }
             };
         }
@@ -99,7 +122,7 @@ public final class OperationMatchers {
                 @Override
                 protected boolean matchesSafely(Replace item) {
                     return item.path.equals(expected.path)
-                            && item.value.equals(expected.value);
+                            && compareNullable(expected.value, item.value);
                 }
             };
         }
@@ -110,9 +133,16 @@ public final class OperationMatchers {
                 @Override
                 protected boolean matchesSafely(Test item) {
                     return item.path.equals(expected.path)
-                            && item.value.equals(expected.value);
+                            && compareNullable(expected.value, item.value);
                 }
             };
+        }
+
+        private static <T, V> boolean compareNullable(T expected, V item) {
+            if (item == null) {
+                return expected == null;
+            }
+            return item.equals(expected);
         }
     }
 

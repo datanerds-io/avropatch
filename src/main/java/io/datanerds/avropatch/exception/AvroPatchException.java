@@ -1,8 +1,8 @@
 package io.datanerds.avropatch.exception;
 
-public class AvroPatchException extends RuntimeException {
+public abstract class AvroPatchException extends RuntimeException {
 
-    public AvroPatchException(String message) {
+    AvroPatchException(String message) {
         super(message);
     }
 }
