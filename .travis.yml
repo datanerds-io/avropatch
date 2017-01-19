@@ -3,3 +3,6 @@ jdk:
    - oraclejdk8
 script:
   - "gradle build"
+  - "gradle jacocoTestReport"
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

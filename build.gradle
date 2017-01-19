@@ -1,8 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'osgi'
-
 apply from: 'project.gradle'
+apply from: 'jacoco.gradle'
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'osgi'
 
 repositories {
     mavenCentral()
@@ -18,20 +19,73 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir;
 }
 
+// Some OSGi information
+jar {
+    manifest {
+        version = project.version
+        symbolicName = "$project.group.$baseName"
+    }
+}
+
 artifacts {
     archives jar;
     archives sourcesJar;
     archives javadocJar;
 }
 
-[
-        install.repositories.mavenInstaller
-]*.pom*.whenConfigured { pom ->
+if (doSign) {
+    signing {
+        sign configurations.archives
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.allTasks.any { it instanceof org.gradle.plugins.signing.Sign }) {
+        allprojects {
+            ext.'signing.keyId'               = ext.has('signing.keyId')
+                                                    ? ext.'signing.keyId'
+                                                    : console().readLine("\nSigning Key Id:\n")
+            ext.'signing.secretKeyRingFile'   = ext.has('signing.secretKeyRingFile')
+                                                    ? ext.'signing.secretKeyRingFile'
+                                                    : console().readLine("\nRing File (absolute path):\n")
+            ext.'signing.password'            = ext.has('signing.password')
+                                                    ? ext.'signing.password'
+                                                    : String.valueOf(console().readPassword("\nSigning Password:\n"))
+        }
+
+        println "Signing artifacts with key ${ext.'signing.keyId'} from ${ext.'signing.secretKeyRingFile'}.\n"
+    }
+}
+
+uploadArchives.repositories.mavenDeployer {
+    if (doSign) {
+        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    }
+
+    if (hasUploadTask) {
+        def mavenUsername = ext.has('mavenUsername')
+                                ? ext.'mavenUsername'
+                                : console().readLine("\nMaven Deployment User:\n")
+        def mavenPassword = ext.has('mavenPassword')
+                                ? ext.'mavenPassword'
+                                : String.valueOf(console().readPassword("\nMaven Deployment Password:\n"))
+
+        repository(url: repositoryUrl) {
+            authentication(userName: mavenUsername, password: mavenPassword)
+        }
+
+        snapshotRepository(url: snapshotRepositoryUrl) {
+            authentication(userName: mavenUsername, password: mavenPassword)
+        }
+    }
+}
+
+[install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
     pom.project {
         name project.name;
         packaging "jar";
         description project.about;
-        url url;
+        url project.url;
 
         scm {
             url gitrwscm;
@@ -40,11 +94,6 @@ artifacts {
         }
 
         licenses {
-            license {
-                name "Lesser General Public License, version 3 or greater";
-                url "http://www.gnu.org/licenses/lgpl.html";
-                distribution "repo";
-            };
             license {
                 name "Apache Software License, version 2.0";
                 url "http://www.apache.org/licenses/LICENSE-2.0";
@@ -60,4 +109,12 @@ artifacts {
             }
         }
     }
+}
+
+def console() {
+    if (!System.console()) {
+        throw new GradleException("Could not find Console object." +
+                "Ensure task is not run by Gradle daemon (e.g. use option --no-daemon).")
+    }
+    System.console()
 }

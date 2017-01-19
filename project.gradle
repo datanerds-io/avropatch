@@ -1,7 +1,6 @@
-group = 'io.datanerds';
-version = '0.1.0-SNAPSHOT';
-sourceCompatibility = '1.8';
-targetCompatibility = '1.8';
+apply plugin: 'java'
+
+group = "io.datanerds"
 
 project.ext {
     about = "An Avro implementation of JSON Patch as defined in RFC 6902"
@@ -11,14 +10,20 @@ project.ext {
     developer = "Frank Wisniewski"
     developerId = "frankwis"
     developerMail = "frankwis@codekoffer.de"
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
 }
 
 ext {
     slf4jVersion = "1.7.18"
+    isReleaseBuild = !version.endsWith("SNAPSHOT")
+    hasUploadTask = project.gradle.startParameter.taskNames.any { it.equals("uploadArchives") }
+    doSign = isReleaseBuild && hasUploadTask
+    repositoryUrl = project.hasProperty('repository') ?: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepositoryUrl = project.hasProperty('snapshotRepository') ?: 'https://oss.sonatype.org/content/repositories/snapshots/'
 }
 
 dependencies {
-
     compile([
             "org.apache.avro:avro:1.8.1",
             "org.slf4j:slf4j-api:$slf4jVersion",
