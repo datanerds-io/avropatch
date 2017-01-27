@@ -1,5 +1,5 @@
 apply from: 'project.gradle'
-apply from: 'jacoco.gradle'
+apply from: 'gradle/jacoco.gradle'
 
 apply plugin: 'maven'
 apply plugin: 'signing'

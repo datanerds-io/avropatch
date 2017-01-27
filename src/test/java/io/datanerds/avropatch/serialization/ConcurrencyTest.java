@@ -3,7 +3,8 @@ package io.datanerds.avropatch.serialization;
 import com.google.common.collect.ImmutableList;
 import io.datanerds.avropatch.Patch;
 import io.datanerds.avropatch.operation.Operation;
-import org.hamcrest.CoreMatchers;
+import io.datanerds.avropatch.operation.OperationGenerator;
+import io.datanerds.avropatch.value.Bimmel;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.*;
 
-import static io.datanerds.avropatch.operation.matcher.PatchMatcher.equalTo;
 import static io.datanerds.avropatch.serialization.PatchMapper.arrayBuilder;
 import static io.datanerds.avropatch.serialization.PatchMapper.builder;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -100,7 +101,7 @@ public class ConcurrencyTest {
     private void verify(List<Patch> input, List<Patch> output) {
         assertThat(input, notNullValue());
         assertThat(output, notNullValue());
-        assertThat(input.size(), is(CoreMatchers.equalTo(output.size())));
+        assertThat(input.size(), is(equalTo(output.size())));
         for (int i = 0; i < input.size(); i++) {
             assertThat(input.get(i), is(equalTo(output.get(i))));
         }

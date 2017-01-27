@@ -1,5 +1,8 @@
 package io.datanerds.avropatch.operation;
 
+import javax.annotation.Generated;
+import java.util.Objects;
+
 /**
  * This class represents the "copy" operation of RFC 6902 'JavaScript Object Notation (JSON) Patch'.
  *
@@ -22,5 +25,25 @@ public final class Copy implements Operation {
     public Copy(Path from, Path path) {
         this.from = from;
         this.path = path;
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Copy copy = (Copy) o;
+        return Objects.equals(from, copy.from) &&
+                Objects.equals(path, copy.path);
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public int hashCode() {
+        return Objects.hash(from, path);
     }
 }

@@ -3,6 +3,8 @@ package io.datanerds.avropatch;
 import io.datanerds.avropatch.value.DefaultSchema;
 import io.datanerds.avropatch.operation.Operation;
 import org.apache.avro.reflect.AvroSchema;
+
+import javax.annotation.Generated;
 import java.util.*;
 
 /**
@@ -36,5 +38,25 @@ public class Patch {
 
     public Map<String, ?> getHeaders() {
         return Collections.unmodifiableMap(headers);
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Patch patch = (Patch) o;
+        return Objects.equals(headers, patch.headers) &&
+                Objects.equals(operations, patch.operations);
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public int hashCode() {
+        return Objects.hash(headers, operations);
     }
 }

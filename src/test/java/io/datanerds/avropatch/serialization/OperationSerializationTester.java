@@ -9,14 +9,11 @@ import io.datanerds.avropatch.value.type.UuidType;
 import org.apache.avro.Schema;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
-import java.util.function.Function;
 
-import static io.datanerds.avropatch.operation.matcher.OperationMatchers.equalTo;
 import static io.datanerds.avropatch.value.type.PrimitiveType.*;
 import static org.apache.avro.Schema.createUnion;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -39,21 +36,6 @@ public class OperationSerializationTester extends SerializationTester<Operation>
         super(SCHEMATA.get(clazz));
     }
 
-    public static List<Operation> createSomeOperations(Function<Object, Operation> operationFunction) {
-        List<Operation> operations = new ArrayList<>();
-        operations.add(createOperation(operationFunction, "hello world"));
-        operations.add(createOperation(operationFunction, 42));
-        operations.add(createOperation(operationFunction, 42L));
-        operations.add(createOperation(operationFunction, 123.456d));
-        operations.add(createOperation(operationFunction, 123.456f));
-        operations.add(createOperation(operationFunction, new BigInteger("8364789684563949576378945698056348956")));
-        operations.add(createOperation(operationFunction, new BigDecimal("956740578902345.56734895627895")));
-        operations.add(createOperation(operationFunction, UUID.randomUUID()));
-        operations.add(createOperation(operationFunction, new Date()));
-
-        return operations;
-    }
-
     @Override
     public void reserializeAndAssert(Operation value) throws IOException {
         Operation operation = reserialize(value);
@@ -64,9 +46,5 @@ public class OperationSerializationTester extends SerializationTester<Operation>
         for (Operation operation : operations) {
             reserializeAndAssert(operation);
         }
-    }
-
-    private static <T> Operation createOperation(Function<T, Operation> operationFunction, T value) {
-        return operationFunction.apply(value);
     }
 }

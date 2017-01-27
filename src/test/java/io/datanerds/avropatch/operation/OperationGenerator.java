@@ -1,17 +1,16 @@
-package io.datanerds.avropatch.serialization;
+package io.datanerds.avropatch.operation;
 
-import io.datanerds.avropatch.operation.*;
+import io.datanerds.avropatch.value.Bimmel;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-enum OperationGenerator {
+public enum OperationGenerator {
 
     ADD(() -> new Add<>(generatePath(), generateValue())),
     COPY(() -> new Copy(generatePath(), generatePath())),
@@ -30,6 +29,37 @@ enum OperationGenerator {
 
     public static Operation randomOperation() {
         return values()[random.nextInt(values().length)].getOperation();
+    }
+
+    public static List<Operation> createSomeOperations(Function<Object, Operation> operationFunction) {
+        List<Operation> operations = new ArrayList<>();
+        operations.add(createOperation(operationFunction, "hello world"));
+        operations.add(createOperation(operationFunction, 42));
+        operations.add(createOperation(operationFunction, 42L));
+        operations.add(createOperation(operationFunction, 123.456d));
+        operations.add(createOperation(operationFunction, 123.456f));
+        operations.add(createOperation(operationFunction, new BigInteger("8364789684563949576378945698056348956")));
+        operations.add(createOperation(operationFunction, new BigDecimal("956740578902345.56734895627895")));
+        operations.add(createOperation(operationFunction, UUID.randomUUID()));
+        operations.add(createOperation(operationFunction, new Date()));
+
+        return operations;
+    }
+
+    public static <T> Add<T> add(T value) {
+        return new Add<>(Path.of("hello", "world"), value);
+    }
+
+    public static <T> Replace<T> replace(T value) {
+        return new Replace<>(Path.of("hello", "world"), value);
+    }
+
+    public static <T> io.datanerds.avropatch.operation.Test<T> test(T value) {
+        return new io.datanerds.avropatch.operation.Test<>(Path.of("hello", "world"), value);
+    }
+
+    private static <T> Operation createOperation(Function<T, Operation> operationFunction, T value) {
+        return operationFunction.apply(value);
     }
 
     private static Object generateValue() { return ValueType.generateObject(); }
