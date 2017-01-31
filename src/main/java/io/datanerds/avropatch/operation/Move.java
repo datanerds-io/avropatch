@@ -1,5 +1,8 @@
 package io.datanerds.avropatch.operation;
 
+import javax.annotation.Generated;
+import java.util.Objects;
+
 /**
  * This class represents the "move" operation of RFC 6902 'JavaScript Object Notation (JSON) Patch'.
  *
@@ -22,5 +25,25 @@ public final class Move implements Operation {
     public Move(Path from, Path path) {
         this.from = from;
         this.path = path;
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Move move = (Move) o;
+        return Objects.equals(from, move.from) &&
+                Objects.equals(path, move.path);
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public int hashCode() {
+        return Objects.hash(from, path);
     }
 }

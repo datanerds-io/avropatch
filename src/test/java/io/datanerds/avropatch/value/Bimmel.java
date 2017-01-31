@@ -1,4 +1,4 @@
-package io.datanerds.avropatch.serialization;
+package io.datanerds.avropatch.value;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -10,7 +10,7 @@ public class Bimmel {
     public final UUID id;
     public final Bommel bommel;
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings("unused") // no-arg constructor for Avro
     private Bimmel() {
         this(null, -42, null, null);
     }

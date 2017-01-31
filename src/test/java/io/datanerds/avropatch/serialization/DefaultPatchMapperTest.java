@@ -14,8 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static io.datanerds.avropatch.operation.matcher.OperationMatchers.hasItem;
-import static io.datanerds.avropatch.operation.matcher.PatchMatcher.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;

@@ -6,6 +6,7 @@ import io.datanerds.avropatch.operation.Add;
 import io.datanerds.avropatch.operation.Copy;
 import io.datanerds.avropatch.operation.Path;
 import io.datanerds.avropatch.operation.Replace;
+import io.datanerds.avropatch.value.Bimmel;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.UUID;
 
-import static io.datanerds.avropatch.operation.matcher.PatchMatcher.equalTo;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 

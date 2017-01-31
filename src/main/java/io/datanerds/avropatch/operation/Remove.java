@@ -1,5 +1,8 @@
 package io.datanerds.avropatch.operation;
 
+import javax.annotation.Generated;
+import java.util.Objects;
+
 /**
  * This class represents the "remove" operation of RFC 6902 'JavaScript Object Notation (JSON) Patch'.
  *
@@ -19,5 +22,24 @@ public final class Remove implements Operation {
      */
     public Remove(Path path) {
         this.path = path;
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Remove remove = (Remove) o;
+        return Objects.equals(path, remove.path);
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public int hashCode() {
+        return Objects.hash(path);
     }
 }

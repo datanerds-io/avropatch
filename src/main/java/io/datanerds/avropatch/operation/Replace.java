@@ -3,6 +3,9 @@ package io.datanerds.avropatch.operation;
 import io.datanerds.avropatch.value.DefaultSchema;
 import org.apache.avro.reflect.AvroSchema;
 
+import javax.annotation.Generated;
+import java.util.Objects;
+
 /**
  * This class represents the "replace" operation of RFC 6902 'JavaScript Object Notation (JSON) Patch'.
  *
@@ -28,5 +31,25 @@ public final class Replace<T> implements Operation {
     public Replace(Path path, T value) {
         this.path = path;
         this.value = value;
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Replace<T> replace = (Replace<T>) o;
+        return Objects.equals(path, replace.path) &&
+                Objects.equals(value, replace.value);
+    }
+
+    @Override
+    @Generated("IntelliJ IDEA")
+    public int hashCode() {
+        return Objects.hash(path, value);
     }
 }

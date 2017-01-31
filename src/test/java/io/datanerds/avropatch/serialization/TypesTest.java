@@ -5,14 +5,13 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static io.datanerds.avropatch.serialization.OperationSerializationTester.createSomeOperations;
+import static io.datanerds.avropatch.operation.OperationGenerator.createSomeOperations;
 
 public class TypesTest {
 
     @Test
     public void add() throws IOException {
-        new OperationSerializationTester(Add.class)
-                .reserializeAndAssert(createSomeOperations(value -> new Add<>(Path.of("hello", "world"), value)));
+        new OperationSerializationTester(Add.class).reserializeAndAssert(createSomeOperations(OperationGenerator::add));
     }
 
     @Test
@@ -35,15 +34,13 @@ public class TypesTest {
 
     @Test
     public void replace() throws IOException {
-        new OperationSerializationTester(Replace.class).reserializeAndAssert(
-                createSomeOperations(value -> new Replace<>(Path.of("hello"), value)));
+        new OperationSerializationTester(Replace.class)
+                .reserializeAndAssert(createSomeOperations(OperationGenerator::replace));
     }
 
     @Test
     public void test() throws IOException {
         new OperationSerializationTester(io.datanerds.avropatch.operation.Test.class)
-                .reserializeAndAssert(
-                        createSomeOperations(
-                                value -> new io.datanerds.avropatch.operation.Test<>(Path.of("hello", "world"), value)));
+                .reserializeAndAssert( createSomeOperations(OperationGenerator::test));
     }
 }

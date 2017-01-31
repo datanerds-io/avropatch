@@ -2,6 +2,7 @@ package io.datanerds.avropatch.operation;
 
 import io.datanerds.avropatch.exception.InvalidReferenceTokenException;
 
+import javax.annotation.Generated;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -178,6 +179,7 @@ public class Path {
     }
 
     @Override
+    @Generated("IntelliJ IDEA")
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -190,6 +192,7 @@ public class Path {
     }
 
     @Override
+    @Generated("IntelliJ IDEA")
     public int hashCode() {
         return Objects.hash(parts);
     }
