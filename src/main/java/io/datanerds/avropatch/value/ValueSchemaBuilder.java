@@ -2,10 +2,7 @@ package io.datanerds.avropatch.value;
 
 import avro.shaded.com.google.common.collect.Lists;
 import io.datanerds.avropatch.serialization.PatchMapper;
-import io.datanerds.avropatch.value.type.BigDecimalType;
-import io.datanerds.avropatch.value.type.BigIntegerType;
-import io.datanerds.avropatch.value.type.TimestampType;
-import io.datanerds.avropatch.value.type.UuidType;
+import io.datanerds.avropatch.value.type.*;
 import org.apache.avro.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static io.datanerds.avropatch.value.type.PrimitiveType.*;
+import static io.datanerds.avropatch.value.type.PrimitiveType.NULL;
 
 /**
  * This abstract class provides a builder skeleton for constructing an object depending on an Avro {@link Schema} of
@@ -26,6 +25,15 @@ import static io.datanerds.avropatch.value.type.PrimitiveType.*;
  * @see PatchMapper PatchMapper for usage.
  */
 public class ValueSchemaBuilder<T> {
+
+    private static final List<Schema> AVRO = Stream.of(PrimitiveType.values())
+            .filter(type -> type != NULL)
+            .map(PrimitiveType::getSchema)
+            .collect(Collectors.toList());
+
+    private static final List<Schema> CUSTOM = Arrays.asList(
+            BigDecimalType.SCHEMA, BigIntegerType.SCHEMA, TimestampType.SCHEMA, UuidType.SCHEMA);
+
     private static Logger logger = LoggerFactory.getLogger(ValueSchemaBuilder.class);
     private final Function<Schema, T> instantiator;
     private final Set<Schema> types;
@@ -63,8 +71,7 @@ public class ValueSchemaBuilder<T> {
      * @return the builder instance
      */
     public ValueSchemaBuilder<T> withAvroPrimitives() {
-        types.addAll(Arrays.asList(BOOLEAN.getSchema(), DOUBLE.getSchema(), FLOAT.getSchema(), INTEGER.getSchema(),
-                LONG.getSchema(), STRING.getSchema()));
+        types.addAll(AVRO);
         return this;
     }
 
@@ -82,8 +89,7 @@ public class ValueSchemaBuilder<T> {
      * @see io.datanerds.avropatch.value.conversion.UUIDConversion
      */
     public ValueSchemaBuilder<T> withCustomTypes() {
-        types.addAll(
-                Arrays.asList(BigDecimalType.SCHEMA, BigIntegerType.SCHEMA, TimestampType.SCHEMA, UuidType.SCHEMA));
+        types.addAll(CUSTOM);
         return this;
     }
 
@@ -117,6 +123,30 @@ public class ValueSchemaBuilder<T> {
     public ValueSchemaBuilder<T> with(Schema schema) {
         types.add(schema);
         return this;
+    }
+
+    /**
+     * Instantiates a builder for creating an Avro {@link Schema} of type {@code map}.
+     * @return the builder instance
+     */
+    public static ValueSchemaBuilder<Schema> mapBuilder() {
+        return new ValueSchemaBuilder<>(Schema::createMap);
+    }
+
+    /**
+     * Instantiates a builder for creating an Avro {@link Schema} of type {@code array}.
+     * @return the builder instance
+     */
+    public static ValueSchemaBuilder<Schema> arrayBuilder() {
+        return new ValueSchemaBuilder<>(Schema::createArray);
+    }
+
+    /**
+     * Instantiates a builder for creating an Avro {@link Schema} of type {@code union}.
+     * @return the builder instance
+     */
+    public static ValueSchemaBuilder<Schema> unionBuilder() {
+        return new ValueSchemaBuilder<>(schema -> schema);
     }
 
     private Schema makeSchema() {

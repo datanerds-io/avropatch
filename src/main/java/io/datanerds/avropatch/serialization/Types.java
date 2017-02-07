@@ -1,12 +1,13 @@
 package io.datanerds.avropatch.serialization;
 
+import io.datanerds.avropatch.value.type.TimestampType;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaBuilder;
 
 import java.util.Arrays;
 
+import static io.datanerds.avropatch.value.ValueSchemaBuilder.*;
 import static org.apache.avro.Schema.*;
-import static org.apache.avro.Schema.createRecord;
 
 /**
  * This class holds schemata for all patch {@link io.datanerds.avropatch.operation.Operation}s and
@@ -116,11 +117,20 @@ interface Types {
         String DOC = "This record represents a PATCH holding a sequence of operations to apply to a given object.";
 
         static Schema create(Schema valueSchema) {
+            Schema.Field headers = new Schema.Field("headers",
+                    mapBuilder().withSupportedTypes().with(arrayBuilder().withSupportedTypes().build()).build(),
+                    "Arbitrary header information.", NO_DEFAULT);
+            Schema.Field resource = new Schema.Field("resource",
+                    unionBuilder().withSupportedTypes().build(),
+                    "Identifier specifying which resource is targeted.", NO_DEFAULT);
+            Schema.Field timestamp = new Schema.Field("timestamp",
+                    TimestampType.SCHEMA,
+                    "Timestamp information.", NO_DEFAULT);
             Schema.Field operations = new Schema.Field("operations",
                     Schema.createArray(Types.Operation.create(valueSchema)),
                     "Sequence of operations to apply to a given object.", NO_DEFAULT);
-            return createRecord(NAME, DOC, PATCH_NAMESPACE, false, Arrays.asList(operations));
-
+            return createRecord(NAME, DOC, PATCH_NAMESPACE, false,
+                    Arrays.asList(headers, resource, timestamp, operations));
         }
     }
 }
