@@ -96,12 +96,12 @@ public class PatchTest {
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void immutableHeadersRemove() {
+    public void exceptionWhenRemovingImmutableHeaders() {
         new Patch<>(resource, operations, headers).getHeaders().remove("test 1");
     }
 
     @Test(expected = UnsupportedOperationException.class)
-    public void immutableHeadersPut() {
+    public void exceptionWhenEditingImmutableHeaders() {
         new Patch<>(resource, operations, headers).getHeaders().put("foo", 22);
     }
 }

@@ -29,7 +29,7 @@ public class Patch<T> {
 
     @SuppressWarnings("unused") // no-arg constructor needed by Avro
     private Patch() {
-        this(null, Collections.emptyList());
+        this(null);
     }
 
     /**
@@ -79,10 +79,16 @@ public class Patch<T> {
      * @param timestamp timestamp
      */
     public Patch(T resource, List<Operation> operations, Map<String, ?> headers, Date timestamp) {
-        this.operations = Collections.unmodifiableList(new ArrayList<>(operations));
+        Objects.nonNull(resource);
+        this.operations = unmodifiableNullableList(operations);
         this.resource = resource;
         this.timestamp = timestamp;
-        this.headers = Collections.unmodifiableMap(new HashMap<>(headers));
+        this.headers = Collections.unmodifiableMap(new HashMap<>(Optional.ofNullable(headers).orElse(Collections.emptyMap())));
+    }
+
+    private List<Operation> unmodifiableNullableList(List<Operation> operations) {
+        return Collections.unmodifiableList(
+                new ArrayList<>(Optional.ofNullable(operations).orElse(Collections.emptyList())));
     }
 
     public Operation getOperation(int index) {
