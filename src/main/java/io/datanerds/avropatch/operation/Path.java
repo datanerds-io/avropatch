@@ -3,6 +3,7 @@ package io.datanerds.avropatch.operation;
 import io.datanerds.avropatch.exception.InvalidReferenceTokenException;
 
 import javax.annotation.Generated;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -138,8 +139,28 @@ public class Path {
         return new Path(parts.subList(0, parts.size() - 1));
     }
 
+    public Path leaf() {
+        if (parts.size() == 0) {
+            return ROOT;
+        }
+        return new Path(parts.subList(parts.size() - 1, parts.size()));
+    }
+
     public List<String> parts() {
         return parts;
+    }
+
+    public List<Path> subPaths() {
+        if (parts.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Path> subPaths = new ArrayList<>();
+        for (int i = 1; i <= parts.size(); i++) {
+            subPaths.add(new Path(parts.subList(0, i)));
+        }
+
+        return subPaths;
     }
 
     private static Function<Path, Stream<String>> partsStream() {

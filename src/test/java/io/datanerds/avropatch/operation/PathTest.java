@@ -9,9 +9,9 @@ import org.junit.rules.ExpectedException;
 
 import static io.datanerds.avropatch.operation.Path.ROOT;
 import static io.datanerds.avropatch.operation.Path.SLASH;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.emptyIterableOf;
+import static org.hamcrest.Matchers.iterableWithSize;
 import static org.junit.Assert.assertThat;
 
 public class PathTest {
@@ -92,10 +92,31 @@ public class PathTest {
     }
 
     @Test
+    public void leaf() {
+        Path path = Path.of("hello", "world");
+        assertThat(path.leaf(), is(equalTo(Path.of("world"))));
+        assertThat(ROOT.leaf(), is(equalTo(ROOT)));
+    }
+
+    @Test
     public void parts() {
         Path path = Path.of("hello", "world");
-        assertThat(path.parts(), hasItems("hello", "world"));
-        assertThat(path.parts().size(), is(equalTo(2)));
+        assertThat(path.parts(), allOf(
+                iterableWithSize(2),
+                hasItems("hello", "world")));
+    }
+
+    @Test
+    public void subPaths() {
+        Path path = Path.of("hello", "world");
+        assertThat(path.subPaths(), allOf(
+                iterableWithSize(2),
+                hasItems(Path.of("hello"), Path.parse("/hello/world"))));
+    }
+
+    @Test
+    public void subPathsOfRoot() {
+        assertThat(ROOT.subPaths(), emptyIterableOf(Path.class));
     }
 
     @Test
@@ -106,9 +127,12 @@ public class PathTest {
     }
 
     @Test
-    public void asString() {
-        Path path = Path.of("hello", "world");
-        assertThat(path.toString(), is(equalTo("/hello/world")));
+    public void pathAsString() {
+        assertThat(Path.of("hello", "world").toString(), is(equalTo("/hello/world")));
+    }
+
+    @Test
+    public void rootAsString() {
         assertThat(ROOT.toString(), is(equalTo("/")));
     }
 

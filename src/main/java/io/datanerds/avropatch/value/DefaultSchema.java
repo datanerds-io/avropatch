@@ -81,4 +81,11 @@ public interface DefaultSchema {
                     + "        \"logicalType\": \"uuid\"\n"
                     + "    }]\n"
                     + "}";
+    String TIMESTAMP =
+            "{"
+                    + "    \"type\": \"fixed\","
+                    + "    \"name\": \"timestamp\","
+                    + "    \"size\": 8,"
+                    + "    \"logicalType\": \"timestamp\""
+                    + "}";
 }

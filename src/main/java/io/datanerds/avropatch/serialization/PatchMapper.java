@@ -9,14 +9,15 @@ import org.apache.avro.io.*;
 import javax.annotation.concurrent.ThreadSafe;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * This mapper provides functionality for converting between {@link Patch} objects and {@code byte}[] facilitating Avro.
  */
 @ThreadSafe
 public final class PatchMapper {
-    private final DatumWriter<Patch> writer;
-    private final DatumReader<Patch> reader;
+    private final DatumWriter<Patch<?>> writer;
+    private final DatumReader<Patch<?>> reader;
 
     /**
      * Constructs the default {@link PatchMapper} with support for values of type {@link Boolean}, {@link Double},
@@ -33,15 +34,44 @@ public final class PatchMapper {
         this.reader = AvroData.get().createDatumReader(schema);
     }
 
-    public byte[] toBytes(Patch value) throws IOException {
+    public <T> byte[] toBytes(Patch<T> value) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Encoder binaryEncoder = EncoderFactory.get().directBinaryEncoder(outputStream, null);
         writer.write(value, binaryEncoder);
         return outputStream.toByteArray();
     }
 
-    public Patch toPatch(byte[] bytes) throws IOException {
-        return reader.read(null, DecoderFactory.get().binaryDecoder(bytes, null));
+    @SuppressWarnings("unchecked")
+    public <T> Patch<T> toPatch(byte[] bytes) throws IOException {
+        return (Patch<T>) reader.read(null, DecoderFactory.get().binaryDecoder(bytes, null));
+    }
+
+    /**
+     * Reads a {@link Patch} from a {@link ByteBuffer} assuming that its current position is set to zero.
+     * @param buffer buffer of Avro bytes
+     * @param <T> the expected resource type
+     * @return the deserialized {@link Patch} object
+     * @throws IOException if reading from {@link java.nio.Buffer} fails
+     */
+    public <T> Patch<T> toPatch(ByteBuffer buffer) throws IOException {
+        return toPatch(toBytes(buffer));
+    }
+
+    public <T> ByteBuffer toByteBuffer(Patch<T> value) throws IOException {
+        return toByteBuffer(toBytes(value));
+    }
+
+    private static ByteBuffer toByteBuffer(byte[] bytes) throws IOException {
+        return ByteBuffer.wrap(bytes);
+    }
+
+    private static byte[] toBytes(ByteBuffer buffer) throws IOException {
+        if (buffer.hasArray()) {
+            return buffer.array();
+        }
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+        return bytes;
     }
 
     /**
@@ -59,7 +89,7 @@ public final class PatchMapper {
      * @see PatchMapper
      * @return the builder instance
      */
-    public static final ValueSchemaBuilder<PatchMapper> builder() {
+    public static ValueSchemaBuilder<PatchMapper> builder() {
         return new ValueSchemaBuilder<>(schema -> new PatchMapper(Types.Patch.create(schema)));
     }
 
@@ -78,13 +108,13 @@ public final class PatchMapper {
      * Patch patch = new Patch(...);
      * byte[] bytes = serializer.toBytes(patch);
      * </pre></blockquote>
-     * @see ValueSchemaBuilder
+     * @see ValueSchemaBuilder#arrayBuilder()
      * @see Schema
      * @see #builder()
      * @return the builder instance
      */
-    public static final ValueSchemaBuilder<Schema> arrayBuilder() {
-        return new ValueSchemaBuilder<>(schema -> Schema.createArray(schema));
+    public static ValueSchemaBuilder<Schema> arrayBuilder() {
+        return ValueSchemaBuilder.arrayBuilder();
     }
 
     /**
@@ -102,12 +132,12 @@ public final class PatchMapper {
      * Patch patch = new Patch(...);
      * byte[] bytes = serializer.toBytes(patch);
      * </pre></blockquote>
-     * @see ValueSchemaBuilder
+     * @see ValueSchemaBuilder#mapBuilder()
      * @see Schema
      * @see #builder()
      * @return the builder instance
      */
-    public static final ValueSchemaBuilder<Schema> mapBuilder() {
-        return new ValueSchemaBuilder<>(schema -> Schema.createMap(schema));
+    public static ValueSchemaBuilder<Schema> mapBuilder() {
+        return ValueSchemaBuilder.mapBuilder();
     }
 }
