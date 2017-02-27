@@ -1,6 +1,5 @@
 package io.datanerds.avropatch.value;
 
-import avro.shaded.com.google.common.collect.Lists;
 import io.datanerds.avropatch.serialization.PatchMapper;
 import io.datanerds.avropatch.value.type.*;
 import org.apache.avro.Schema;
@@ -146,14 +145,14 @@ public class ValueSchemaBuilder<T> {
      * @return the builder instance
      */
     public static ValueSchemaBuilder<Schema> unionBuilder() {
-        return new ValueSchemaBuilder<>(schema -> schema);
+        return new ValueSchemaBuilder<>(Function.identity());
     }
 
     private Schema makeSchema() {
         if (types.size() == 1) {
             return types.iterator().next();
         } else {
-            return Schema.createUnion(Lists.newArrayList(types));
+            return Schema.createUnion(new ArrayList<>(types));
         }
     }
 }

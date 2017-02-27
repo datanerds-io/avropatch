@@ -1,7 +1,7 @@
 package io.datanerds.avropatch;
 
-import avro.shaded.com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.testing.EqualsTester;
 import io.datanerds.avropatch.operation.Operation;
 import org.junit.Rule;

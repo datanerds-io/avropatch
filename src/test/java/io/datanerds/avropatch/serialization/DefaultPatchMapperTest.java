@@ -1,7 +1,7 @@
 package io.datanerds.avropatch.serialization;
 
-import avro.shaded.com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import io.datanerds.avropatch.Patch;
 import io.datanerds.avropatch.operation.*;
 import org.junit.Test;
