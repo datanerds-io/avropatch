@@ -93,7 +93,7 @@ public class ConcurrencyTest {
             for (int j = 0; j < random.nextInt(MAX_PATCH_SIZE); j++) {
                 operations.add(OperationGenerator.randomOperation());
             }
-            patches.add(new Patch<>(UUID.randomUUID(), operations));
+            patches.add(Patch.from(UUID.randomUUID(), operations));
         }
         return patches;
     }
