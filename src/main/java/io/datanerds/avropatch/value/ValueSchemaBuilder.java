@@ -35,12 +35,12 @@ public class ValueSchemaBuilder<T> {
 
     private static Logger logger = LoggerFactory.getLogger(ValueSchemaBuilder.class);
     private final Function<Schema, T> instantiator;
-    private final Set<Schema> types;
+    private final List<Schema> types;
 
     public ValueSchemaBuilder(Function<Schema, T> instantiator) {
         Objects.nonNull(instantiator);
         this.instantiator = instantiator;
-        this.types = new HashSet<>();
+        this.types = new ArrayList<>();
     }
 
     public T build() {

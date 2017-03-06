@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 public class PatchTest {
 
     private final UUID uuid = UUID.randomUUID();
-    private final Map<String, ?> headers = ImmutableMap.of("test 1", "foo", "test 2", uuid);
+    private final Map<String, ? super Object> headers = ImmutableMap.of("test 1", "foo", "test 2", uuid);
     private final List<Operation> operations = ImmutableList.of(randomOperation(), randomOperation(), randomOperation());
     private final UUID resource = UUID.randomUUID();
 
@@ -32,18 +32,18 @@ public class PatchTest {
     @Test
     public void equality() {
         new EqualsTester()
-                .addEqualityGroup(new Patch<>(resource, operations, headers), new Patch<>(resource, operations, headers))
-                .addEqualityGroup(new Patch<>(resource, operations))
-                .addEqualityGroup(new Patch<>(resource, ImmutableList.of(randomOperation()),
+                .addEqualityGroup(Patch.from(resource, operations, headers), Patch.from(resource, operations, headers))
+                .addEqualityGroup(Patch.from(resource, operations))
+                .addEqualityGroup(Patch.from(resource, ImmutableList.of(randomOperation()),
                         ImmutableMap.of("test 1", "bar", "test 2", uuid)))
-                .addEqualityGroup(new Patch<>(resource, ImmutableList.of(randomOperation())))
-                .addEqualityGroup(new Patch<>(resource, ImmutableList.of(randomOperation())))
+                .addEqualityGroup(Patch.from(resource, ImmutableList.of(randomOperation())))
+                .addEqualityGroup(Patch.from(resource, ImmutableList.of(randomOperation())))
                 .testEquals();
     }
 
     @Test
     public void getHeader() {
-        Patch<?> patch = new Patch<>(resource, operations, headers);
+        Patch<?> patch = Patch.from(resource, operations, headers);
         String stringHeader = patch.getHeader("test 1");
         assertThat(stringHeader, is(equalTo("foo")));
         UUID uuidHeader = patch.getHeader("test 2");
@@ -52,26 +52,26 @@ public class PatchTest {
 
     @Test
     public void isEmpty() {
-        assertTrue(new Patch<>(resource).isEmpty());
-        assertTrue(new Patch<>(resource, headers).isEmpty());
-        assertFalse(new Patch<>(resource, operations, headers).isEmpty());
+        assertTrue(Patch.from(resource).isEmpty());
+        assertTrue(Patch.from(resource, headers).isEmpty());
+        assertFalse(Patch.from(resource, operations, headers).isEmpty());
     }
 
     @Test
     public void size() {
-        assertThat(new Patch<>(resource).size(), is(equalTo(0)));
-        assertThat(new Patch<>(resource, operations, headers).size(), is(equalTo(operations.size())));
+        assertThat(Patch.from(resource).size(), is(equalTo(0)));
+        assertThat(Patch.from(resource, operations, headers).size(), is(equalTo(operations.size())));
     }
 
     @Test
     public void stream() {
-        assertThat(operations, is(equalTo(new Patch<>(resource, operations).stream().collect(Collectors.toList()))));
+        assertThat(operations, is(equalTo(Patch.from(resource, operations).stream().collect(Collectors.toList()))));
     }
 
     @Test
     public void getter() {
         Date timestamp = new Date();
-        Patch<UUID> patch = new Patch<>(resource, operations, headers, timestamp);
+        Patch<UUID> patch = Patch.from(resource, operations, headers, timestamp);
         assertThat(patch.getResource(), is(equalTo(resource)));
         assertThat(patch.getTimestamp(), is(equalTo(timestamp)));
         for (int i = 0; i < operations.size(); i++) {
@@ -81,13 +81,13 @@ public class PatchTest {
 
     @Test
     public void getNotExistentHeader() {
-        String value = new Patch<>(resource, operations, headers).getHeader("test 7");
+        String value = Patch.from(resource, operations, headers).getHeader("test 7");
         assertNull(value);
     }
 
     @Test
     public void getHeaderWithIncompatibleType() {
-        Patch<UUID> patch = new Patch<>(resource, operations, headers);
+        Patch<UUID> patch =  Patch.from(resource, operations, headers);
         assertTrue(patch.hasHeader("test 1"));
 
         exception.expect(ClassCastException.class);
@@ -97,11 +97,11 @@ public class PatchTest {
 
     @Test(expected = UnsupportedOperationException.class)
     public void exceptionWhenRemovingImmutableHeaders() {
-        new Patch<>(resource, operations, headers).getHeaders().remove("test 1");
+        Patch.from(resource, operations, headers).getHeaders().remove("test 1");
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void exceptionWhenEditingImmutableHeaders() {
-        new Patch<>(resource, operations, headers).getHeaders().put("foo", 22);
+        Patch.from(resource, operations, headers).getHeaders().put("foo", 22);
     }
 }
