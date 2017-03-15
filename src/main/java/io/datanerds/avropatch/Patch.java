@@ -43,6 +43,8 @@ public class Patch<T> {
      * Minimalistic factory method setting the timestamp to {@code new Date()} and initializing the operation list and
      * headers map with {@link Collections#emptyList()} / {@link Collections#emptyMap()}.
      * @param resource resource identifier
+     * @param <T> type of the resource identifier
+     * @return new instance of a {@link Patch}
      */
     public static <T> Patch<T> from(T resource) {
         Objects.requireNonNull(resource);
@@ -54,6 +56,8 @@ public class Patch<T> {
      * {@link Collections#emptyMap()}.
      * @param resource resource identifier
      * @param operations sequence of operations to apply to a object identifiable by {@code resource}
+     * @param <T> type of the resource identifier
+     * @return new instance of a {@link Patch}
      */
     public static <T> Patch<T> from(T resource, List<Operation> operations) {
         Objects.requireNonNull(resource);
@@ -65,6 +69,8 @@ public class Patch<T> {
      * {@link Collections#emptyList()}.
      * @param resource resource identifier
      * @param headers arbitrary header information
+     * @param <T> type of the resource identifier
+     * @return new instance of a {@link Patch}
      */
     public static <T> Patch<T> from(T resource, Map<String, ?> headers) {
         Objects.requireNonNull(resource);
@@ -76,6 +82,8 @@ public class Patch<T> {
      * @param resource resource identifier
      * @param operations sequence of operations to apply to a object identifiable by {@code resource}
      * @param headers arbitrary header information
+     * @param <T> type of the resource identifier
+     * @return new instance of a {@link Patch}
      */
     public static <T> Patch<T> from(T resource, List<Operation> operations, Map<String, ?> headers) {
         Objects.requireNonNull(resource);
@@ -88,6 +96,8 @@ public class Patch<T> {
      * @param operations sequence of operations to apply to a object identifiable by {@code resource}
      * @param headers arbitrary header information
      * @param timestamp timestamp
+     * @param <T> type of the resource identifier
+     * @return new instance of a {@link Patch}
      */
     public static <T> Patch<T> from(T resource, List<Operation> operations, Map<String, ?> headers,  Date timestamp) {
         Objects.requireNonNull(resource);
@@ -129,7 +139,7 @@ public class Patch<T> {
      * @param name name of the header
      * @param <V> expected value type for given header
      * @return header value if exists, {@code null} otherwise
-     * @throws ClassCastException
+     * @throws ClassCastException if given header is not of type {@link T}
      */
     public <V> V getHeader(String name) {
         return (V) headers.get(name);
