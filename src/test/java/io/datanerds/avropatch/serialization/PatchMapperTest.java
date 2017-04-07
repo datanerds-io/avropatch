@@ -26,7 +26,7 @@ public class PatchMapperTest {
     @Test
     public void withCustomTypes() throws IOException {
         PatchMapper serializer = PatchMapper.builder().withCustomTypes().build();
-        Patch patch = new Patch<>(resource,
+        Patch patch = Patch.from(resource,
                 ImmutableList.of(new Add<>(Path.of("hello"), new BigDecimal("23946712384.49879324"))));
         byte[] bytes = serializer.toBytes(patch);
         assertThat(patch, is(equalTo(serializer.toPatch(bytes))));
@@ -42,7 +42,7 @@ public class PatchMapperTest {
                         .build())
                 .withType(Bimmel.class)
                 .build();
-        Patch patch = new Patch<>(resource, ImmutableList.of(
+        Patch patch = Patch.from(resource, ImmutableList.of(
                 new Replace<>(Path.of("hello"), new Bimmel("string", 42, UUID.randomUUID(), new Bimmel.Bommel("Gaga")))));
         byte[] bytes = serializer.toBytes(patch);
         assertThat(patch, is(equalTo(serializer.toPatch(bytes))));
@@ -59,7 +59,7 @@ public class PatchMapperTest {
                 .withAvroPrimitives()
                 .withType(Bimmel.class)
                 .build();
-        Patch patch = new Patch<>(resource, ImmutableList.of(
+        Patch patch = Patch.from(resource, ImmutableList.of(
                 new io.datanerds.avropatch.operation.Test<>(Path.of("hello", "world"), null),
                 new Add<>(Path.of("hello", "world"), "string"),
                 new Replace<>(Path.of("hello"), new Bimmel("string", 42, UUID.randomUUID(), new Bimmel.Bommel("Gaga"))),

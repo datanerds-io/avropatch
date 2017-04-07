@@ -1,7 +1,7 @@
 package io.datanerds.avropatch.serialization;
 
-import avro.shaded.com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import io.datanerds.avropatch.Patch;
 import io.datanerds.avropatch.operation.*;
 import org.junit.Test;
@@ -88,7 +88,7 @@ public class DefaultPatchMapperTest {
 
     @Test
     public void serializesBunchOfOperations() throws IOException {
-        Patch patch = new Patch<>(resource, ImmutableList.of(
+        Patch patch = Patch.from(resource, ImmutableList.of(
                 new Add<>(Path.of("person", "name"), "John Doe"),
                 new Copy(Path.parse("/person/firstName"), Path.parse("/person/lastName")),
                 new Move(Path.parse("/person/firstName"), Path.parse("/person/lastName")),
@@ -107,7 +107,7 @@ public class DefaultPatchMapperTest {
     public void serializesDefaultValueTypes() throws IOException {
         Date date = new Date();
         UUID uuid = UUID.randomUUID();
-        Patch<UUID> patch = new Patch<>(resource, ImmutableList.of(
+        Patch<UUID> patch = Patch.from(resource, ImmutableList.of(
                 new Add<>(Path.of("some", "value"), "John Doe"),
                 new Add<>(Path.of("some", "value"), 42),
                 new Add<>(Path.of("some", "value"), 42L),
@@ -127,7 +127,7 @@ public class DefaultPatchMapperTest {
 
     @Test
     public void serializesArbitraryHeadersWithoutOperations() throws IOException {
-        Patch patch = new Patch<>(resource, Collections.emptyList(), ImmutableMap.of(
+        Patch patch = Patch.from(resource, Collections.emptyList(), ImmutableMap.of(
                 "header 1", UUID.randomUUID(),
                 "header 2", new Date(),
                 "header 3", 1234L,
@@ -142,7 +142,7 @@ public class DefaultPatchMapperTest {
 
     @Test
     public void serializesArbitraryHeadersWithOperations() throws IOException {
-        Patch patch = new Patch<>(ImmutableMap.of(
+        Patch patch = Patch.from(ImmutableMap.of(
                 "header 1", UUID.randomUUID(),
                 "header 2", new Date(),
                 "header 3", 1234L,
@@ -158,6 +158,6 @@ public class DefaultPatchMapperTest {
     }
 
     private <T extends Operation> Patch patchOf(T operation) {
-        return new Patch<>(resource, ImmutableList.of(operation));
+        return Patch.from(resource, ImmutableList.of(operation));
     }
 }
