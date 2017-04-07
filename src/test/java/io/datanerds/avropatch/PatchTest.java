@@ -8,10 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.datanerds.avropatch.operation.OperationGenerator.randomOperation;
@@ -22,7 +19,7 @@ import static org.junit.Assert.*;
 public class PatchTest {
 
     private final UUID uuid = UUID.randomUUID();
-    private final Map<String, ? super Object> headers = ImmutableMap.of("test 1", "foo", "test 2", uuid);
+    private final Map<String, Object> headers = ImmutableMap.of("test 1", "foo", "test 2", uuid);
     private final List<Operation> operations = ImmutableList.of(randomOperation(), randomOperation(), randomOperation());
     private final UUID resource = UUID.randomUUID();
 

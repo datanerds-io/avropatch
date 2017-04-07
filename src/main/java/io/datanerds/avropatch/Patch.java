@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class Patch<T> {
 
     @AvroSchema(DefaultSchema.HEADERS)
-    private final Map<String, ? super Object> headers;
+    private final Map<String, Object> headers;
     @AvroSchema(DefaultSchema.VALUE)
     private final T resource;
     @AvroSchema(DefaultSchema.TIMESTAMP)
@@ -72,7 +72,7 @@ public class Patch<T> {
      * @param <T> type of the resource identifier
      * @return new instance of a {@link Patch}
      */
-    public static <T> Patch<T> from(T resource, Map<String, ?> headers) {
+    public static <T> Patch<T> from(T resource, Map<String, Object> headers) {
         Objects.requireNonNull(resource);
         return new Patch<>(resource, Collections.emptyList(), unmodifiableNullableMap(headers), new Date());
     }
@@ -85,7 +85,7 @@ public class Patch<T> {
      * @param <T> type of the resource identifier
      * @return new instance of a {@link Patch}
      */
-    public static <T> Patch<T> from(T resource, List<Operation> operations, Map<String, ?> headers) {
+    public static <T> Patch<T> from(T resource, List<Operation> operations, Map<String, Object> headers) {
         Objects.requireNonNull(resource);
         return new Patch<>(resource, unmodifiableNullableList(operations), unmodifiableNullableMap(headers), new Date());
     }
@@ -99,13 +99,13 @@ public class Patch<T> {
      * @param <T> type of the resource identifier
      * @return new instance of a {@link Patch}
      */
-    public static <T> Patch<T> from(T resource, List<Operation> operations, Map<String, ?> headers,  Date timestamp) {
+    public static <T> Patch<T> from(T resource, List<Operation> operations, Map<String, Object> headers,  Date timestamp) {
         Objects.requireNonNull(resource);
         Objects.requireNonNull(timestamp);
         return new Patch<>(resource, unmodifiableNullableList(operations), unmodifiableNullableMap(headers), timestamp);
     }
 
-    private static Map<String, ? super Object> unmodifiableNullableMap(Map<String, ?> map) {
+    private static Map<String, Object> unmodifiableNullableMap(Map<String, Object> map) {
         return Collections.unmodifiableMap(new HashMap<>(Optional.ofNullable(map).orElse(Collections.emptyMap())));
     }
 
@@ -130,7 +130,7 @@ public class Patch<T> {
         return operations.isEmpty();
     }
 
-    public Map<String, ? super Object> getHeaders() {
+    public Map<String, Object> getHeaders() {
         return headers;
     }
 
@@ -141,6 +141,7 @@ public class Patch<T> {
      * @return header value if exists, {@code null} otherwise
      * @throws ClassCastException if given header is not of type {@link T}
      */
+    @SuppressWarnings("unchecked")
     public <V> V getHeader(String name) {
         return (V) headers.get(name);
     }
